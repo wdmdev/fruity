@@ -38,6 +38,7 @@ clean:
 
 ## Process raw data into processed data
 data: requirements
+	dvc pull
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py
 
 #################################################################################
