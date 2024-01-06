@@ -177,3 +177,6 @@ cython_debug/
 #.idea/
 /data
 /models
+
+# Custom includes
+!conf/env/

@@ -91,3 +91,18 @@ The directory structure of the project looks like this:
 │
 └── LICENSE              <- MIT Open-source license
 ```
+
+### Hydra Configuration Structure
+
+Description of the Hydra config folder structure:
+
+```txt
+├── config.yaml <- The default settings for your application.
+├── dataset     <- Configuration files related to data handling, like paths to datasets, data preprocessing parameters.
+├── env         <- Environment-specific settings, such as paths and system configurations that might differ from one machine to another.
+├── experiment  <- Used for specific experimental setups.
+├── logging     <- Configurations for logging, including log levels, file paths for saving logs, formats, etc.
+├── model       <- Model-specific configurations, such as model architecture details, hyperparameters specific to the model, and checkpointing information.
+├── optimizer   <- Settings for the optimizer used in training the model. This can include the type of optimizer (e.g., Adam, SGD), learning rate, weight decay, etc.
+└── scheduler   <- Scheduler configurations, such as step size, gamma value for learning rate decay, and other scheduler-specific parameters.
+```
