@@ -35,7 +35,7 @@ We expect to investigate various architectures including:
 * **EfficientNet Models**: Chosen for their balance of accuracy and efficiency.
 * **Vision Transformer (ViT)**: Leveraging transformer architecture as a CNN alternative for image classification.
 
-## Project structure
+## Project Structure
 
 The directory structure of the project looks like this:
 
