@@ -178,5 +178,8 @@ cython_debug/
 /data
 /models
 
+#Custom ignores
+fruity/logs/
+
 # Custom includes
 !conf/env/

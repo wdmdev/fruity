@@ -1,0 +1,14 @@
+_target_: fruity.models.timm_model.TIMMModule
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.001
+  weight_decay: 0.0
+
+net:
+  _target_: timm.create_model
+  model_name: resnet18
+  in_chans: 3
+  num_classes: 131
+  pretrained: True

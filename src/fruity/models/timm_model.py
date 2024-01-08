@@ -42,9 +42,9 @@ class TIMMModule(LightningModule):
         self.criterion = torch.nn.CrossEntropyLoss()
 
         # metric objects for calculating and averaging accuracy across batches
-        self.train_acc = Accuracy()
-        self.val_acc = Accuracy()
-        self.test_acc = Accuracy()
+        self.train_acc = Accuracy(task="multiclass", num_classes=net.num_classes)
+        self.val_acc = Accuracy(task="multiclass", num_classes=net.num_classes)
+        self.test_acc = Accuracy(task="multiclass", num_classes=net.num_classes)
 
         # for averaging loss across batches
         self.train_loss = MeanMetric()
@@ -117,7 +117,7 @@ class TIMMModule(LightningModule):
 
         return {"loss": loss, "preds": preds, "targets": targets}
 
-    def validation_epoch_end(self, outputs: List[Any]):
+    def on_validation_epoch_end(self):
         acc = self.val_acc.compute()  # get current val acc
         self.val_acc_best(acc)  # update best so far val acc
         # log `val_acc_best` as a value through `.compute()` method, instead of as a metric object
@@ -154,11 +154,3 @@ class TIMMModule(LightningModule):
         return {
             "optimizer": self.hparams.optimizer(params=self.parameters()),
         }
-
-
-if __name__ == "__main__":
-    import hydra
-    import omegaconf
-
-    cfg = omegaconf.OmegaConf.load("conf" / "model" / "cifar10.yaml")
-    _ = hydra.utils.instantiate(cfg)
