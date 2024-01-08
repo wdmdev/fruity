@@ -56,8 +56,8 @@ class TIMMModule(LightningModule):
 
         self.predict_transform = torch.nn.Sequential(
             T.Resize([100, 100]),
-            # T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-            T.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+            T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            # T.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         )
 
     # def configure_sharded_model(self):
