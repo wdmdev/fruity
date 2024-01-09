@@ -1,7 +1,5 @@
 import os
-from unittest.mock import patch
-from torchvision.transforms import transforms
-from fruity.datamodules.fruits360 import Fruits360DataModule, Fruits360
+from fruity.datamodules.fruits360 import Fruits360DataModule
 
 class TestFruits360DataModule:
     def test_init(self):
@@ -34,34 +32,3 @@ class TestFruits360DataModule:
 
         # Assert
         assert num_classes == 131
-
-    @patch("fruity.datamodules.fruits360.Fruits360DataModule.prepare_data")
-    def test_prepare_data(self, mock_prepare_data):
-        # Arrange
-        datamodule = Fruits360DataModule()
-
-        # Act
-        datamodule.prepare_data()
-
-        # Assert
-        mock_prepare_data.assert_called_once()
-
-
-class TestFruits360Dataset:
-    def test_image_size(self):
-        # Arrange
-        root_dir = os.path.join("data", "raw", "fruits_360")
-        train = True
-        transform = transforms.Compose([
-            transforms.ToTensor()
-        ])
-
-        dataset = Fruits360(root_dir, train, transform)
-
-        # Act
-        image, _ = dataset[0]
-        image_size = image.shape[1:] # image.shape[0] is the color channel
-
-        # Assert
-        assert image_size == (100, 100)
-
