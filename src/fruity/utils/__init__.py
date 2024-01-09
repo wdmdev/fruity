@@ -1,0 +1,1 @@
+from fruity.utils.callbacks import instantiate_callbacks

@@ -18,4 +18,4 @@ WORKDIR /
 RUN pip install -r requirements.txt --no-cache-dir
 
 # set entrypoint
-ENTRYPOINT ["python", "-u", "src/fruity/train_model.py"]
+ENTRYPOINT ["python", "-u", "src/fruity/train.py"]

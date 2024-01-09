@@ -87,7 +87,7 @@ The directory structure of the project looks like this:
 │       ├── visualization       <- Scripts to create exploratory and results oriented visualizations
 │       │   ├── __init__.py
 │       │   └── visualize.py
-│       ├── train_model.py      <- script for training the model
+│       ├── train.py            <- script for training the model
 │       └── predict_model.py    <- script for predicting from a model
 │
 └── LICENSE                     <- MIT Open-source license

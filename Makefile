@@ -4,7 +4,7 @@
 # GLOBALS                                                                       #
 #################################################################################
 
-PROJECT_NAME = fruity
+export PROJECT_NAME = fruity
 PYTHON_VERSION = 3.10
 PYTHON_INTERPRETER = python
 
@@ -20,7 +20,7 @@ create_environment:
 requirements:
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
-	$(PYTHON_INTERPRETER) -m pip install .
+	$(PYTHON_INTERPRETER) -m pip install -e .
 
 ## Install Developer Python Dependencies
 dev_requirements: requirements
@@ -39,7 +39,11 @@ clean:
 ## Process raw data into processed data
 data: requirements
 	dvc pull
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py
+	$(PYTHON_INTERPRETER) src/fruity/data/make_dataset.py
+
+## Train model
+train: requirements
+	$(PYTHON_INTERPRETER) src/fruity/train.py
 
 #################################################################################
 # Documentation RULES                                                           #
