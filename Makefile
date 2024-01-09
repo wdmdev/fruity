@@ -36,11 +36,6 @@ clean:
 # PROJECT RULES                                                                 #
 #################################################################################
 
-## Process raw data into processed data
-data: requirements
-	dvc pull
-	$(PYTHON_INTERPRETER) src/fruity/data/make_dataset.py
-
 ## Train model
 train: requirements
 	$(PYTHON_INTERPRETER) src/fruity/train.py
