@@ -4,7 +4,7 @@
 # GLOBALS                                                                       #
 #################################################################################
 
-export PROJECT_NAME = fruity
+PROJECT_NAME = fruity
 PYTHON_VERSION = 3.10
 PYTHON_INTERPRETER = python
 
