@@ -1,11 +1,22 @@
+"""Callbacks utils."""
 from typing import List
 
 import hydra
 from omegaconf import DictConfig
 from pytorch_lightning import Callback
 
+
 def instantiate_callbacks(callbacks_cfg: DictConfig) -> List[Callback]:
-    """Instantiates callbacks from config."""
+    """Instantiate callbacks from config.
+
+    Args:
+    ----
+        callbacks_cfg (DictConfig): Config with callbacks.
+
+    Returns:
+    -------
+        List[Callback]: List of callbacks.
+    """
     callbacks: List[Callback] = []
 
     if not callbacks_cfg:
