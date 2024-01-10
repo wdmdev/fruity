@@ -45,12 +45,6 @@ def train(cfg: DictConfig) -> Tuple[Mapping[str, Any], Mapping[str, Any]]:
         # "metrics": train_metrics,
     }
 
-    checkpoint_path = cfg.get("ckpt_path")
-    if checkpoint_path:
-        if not os.path.exists(checkpoint_path):
-            os.makedirs(checkpoint_path)
-
-
     if cfg.get("train"):
         trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"))
 
