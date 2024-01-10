@@ -1,3 +1,4 @@
+"""Module for TIMM models."""
 from typing import Any, Tuple, Mapping
 
 import timm
@@ -7,7 +8,7 @@ import torch
 from pytorch_lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
-from torchvision import transforms as T
+from torchvision import transforms
 
 
 def create_model(model: str, input_ch: int = 3, num_cls: int = 10) -> timm.models:
@@ -62,8 +63,8 @@ class TIMMModule(LightningModule):
         self.val_acc_best = MaxMetric()
 
         self.predict_transform = torch.nn.Sequential(
-            T.Resize([100, 100]),
-            T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            transforms.Resize([100, 100]),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:

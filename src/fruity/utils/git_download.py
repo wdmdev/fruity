@@ -1,10 +1,11 @@
+"""Utility functions for downloading files from GitHub repositories."""
 import requests
 import os
 from tqdm import tqdm
 
 
 def download_github_folder(repo_url: str, branch: str, folder_path: str, target_dir: str) -> None:
-    """Downloads a specific folder from a GitHub repository as a zip file with a progress bar including ETA.
+    """Download a specific folder from a GitHub repository as a zip file with a progress bar including ETA.
 
     Args:
     ----

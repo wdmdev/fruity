@@ -1,4 +1,4 @@
-# import os
+"""Training script for the model."""
 from typing import List, Optional, Tuple, Mapping, Any
 
 import hydra
@@ -10,8 +10,7 @@ from fruity import utils
 
 
 def train(cfg: DictConfig) -> Tuple[Mapping[str, Any], Mapping[str, Any]]:
-    """Trains the model. Can additionally evaluate on a testset, using best weights obtained during
-    training.
+    """Trains the model. Can additionally evaluate on a testset, using best weights obtained during training.
 
     This method is wrapped in optional @task_wrapper decorator which applies extra utilities
     before and after the call.
@@ -66,12 +65,18 @@ def train(cfg: DictConfig) -> Tuple[Mapping[str, Any], Mapping[str, Any]]:
 
 @hydra.main(version_base="1.2", config_path="../../conf", config_name="train.yaml")
 def main(cfg: DictConfig) -> Optional[float]:
-    # train the model
+    """Constitutes the main entry point for training.
+
+    Args:
+    ----
+        cfg (DictConfig): Configuration composed by Hydra.
+
+    Returns:
+    -------
+        Optional[float]: Optimized metric value.
+    """
     metric_dict, _ = train(cfg)
 
-    # metric_value = None
-
-    # if os.environ['NODE_RANK'] == 0:
     # safely retrieve metric value for hydra-based hyperparameter optimization
     metric_value = utils.get_metric_value(metric_dict=metric_dict, metric_name=cfg.get("optimized_metric"))
 

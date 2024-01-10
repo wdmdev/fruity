@@ -47,11 +47,11 @@ class Fruits360(Dataset):
                 self.images.append(img_path)
                 self.targets.append(i)
 
-    def __len__(self) -> None:
+    def __len__(self) -> int:
         """Return length of dataset."""
         return len(self.images)
 
-    def __getitem__(self, idx: int) -> None:
+    def __getitem__(self, idx: int) -> Tuple[torch.Tensor, int]:
         """Return sample from dataset."""
         img_path = self.images[idx]
         img = Image.open(img_path)
