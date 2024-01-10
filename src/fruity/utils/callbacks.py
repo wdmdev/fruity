@@ -4,6 +4,7 @@ import hydra
 from omegaconf import DictConfig
 from pytorch_lightning import Callback
 
+
 def instantiate_callbacks(callbacks_cfg: DictConfig) -> List[Callback]:
     """Instantiates callbacks from config."""
     callbacks: List[Callback] = []

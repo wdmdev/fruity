@@ -1,5 +1,5 @@
 # import os
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Mapping, Any
 
 import hydra
 import pytorch_lightning as pl
@@ -8,7 +8,8 @@ from pytorch_lightning import Callback, LightningDataModule, LightningModule, Tr
 
 from fruity import utils
 
-def train(cfg: DictConfig) -> Tuple[dict, dict]:
+
+def train(cfg: DictConfig) -> Tuple[Mapping[str, Any], Mapping[str, Any]]:
     """Trains the model. Can additionally evaluate on a testset, using best weights obtained during
     training.
 
@@ -16,12 +17,13 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
     before and after the call.
 
     Args:
+    ----
         cfg (DictConfig): Configuration composed by Hydra.
 
     Returns:
+    -------
         Tuple[dict, dict]: Dict with metrics and dict with all instantiated objects.
     """
-
     # set seed for random number generators in pytorch, numpy and python.random
     if cfg.get("seed"):
         pl.seed_everything(cfg.seed, workers=True)
@@ -42,7 +44,6 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
         "trainer": trainer,
         # "metrics": train_metrics,
     }
-
 
     if cfg.get("train"):
         trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"))
@@ -65,7 +66,6 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
 
 @hydra.main(version_base="1.2", config_path="../../conf", config_name="train.yaml")
 def main(cfg: DictConfig) -> Optional[float]:
-
     # train the model
     metric_dict, _ = train(cfg)
 
@@ -73,9 +73,7 @@ def main(cfg: DictConfig) -> Optional[float]:
 
     # if os.environ['NODE_RANK'] == 0:
     # safely retrieve metric value for hydra-based hyperparameter optimization
-    metric_value = utils.get_metric_value(
-        metric_dict=metric_dict, metric_name=cfg.get("optimized_metric")
-    )
+    metric_value = utils.get_metric_value(metric_dict=metric_dict, metric_name=cfg.get("optimized_metric"))
 
     # return optimized metric
     return metric_value
