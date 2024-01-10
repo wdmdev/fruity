@@ -1,3 +1,5 @@
+"""Utility functions for Fruity."""
+
 from typing import Mapping, Any, Optional
 
 
