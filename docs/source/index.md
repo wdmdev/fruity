@@ -1,4 +1,3 @@
 ## Documentation
 
 Documentation for fruity
-
