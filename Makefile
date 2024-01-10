@@ -4,7 +4,7 @@
 # GLOBALS                                                                       #
 #################################################################################
 
-export PROJECT_NAME = fruity
+PROJECT_NAME = fruity
 PYTHON_VERSION = 3.10
 PYTHON_INTERPRETER = python
 
@@ -35,11 +35,6 @@ clean:
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################
-
-## Process raw data into processed data
-data: requirements
-	dvc pull
-	$(PYTHON_INTERPRETER) src/fruity/data/make_dataset.py
 
 ## Train model
 train: requirements
