@@ -1,4 +1,4 @@
-# import os
+import os
 from typing import List, Optional, Tuple
 
 import hydra
@@ -42,6 +42,11 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
         "trainer": trainer,
         # "metrics": train_metrics,
     }
+
+    checkpoint_path = cfg.get("ckpt_path")
+    if checkpoint_path:
+        if not os.path.exists(checkpoint_path):
+            os.makedirs(checkpoint_path)
 
 
     if cfg.get("train"):
