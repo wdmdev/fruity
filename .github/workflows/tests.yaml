@@ -28,3 +28,9 @@ jobs:
       run: |
         pip install pytest
         pytest -v
+
+    - name: Test with ruff
+      run: |
+        pip install ruff
+        ruff check .
+        ruff format .
