@@ -37,7 +37,7 @@ class Fruits360(Dataset):
 
         self.classes = os.listdir(self.root_dir)
         self.classes.sort()
-        self.class_to_idx = {self.classes[i]: i for i in range(len(self.classes))}
+        self.idx_to_class = {i: cls for i, cls in enumerate(self.classes)}
         self.images = []
         self.targets = []
         for i, cls in enumerate(self.classes):

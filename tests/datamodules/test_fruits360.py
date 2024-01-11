@@ -1,9 +1,13 @@
+"""Tests for the Fruits360DataModule class.""" ""
 import os
 from fruity.datamodules.fruits360 import Fruits360DataModule
 
+
 class TestFruits360DataModule:
-    def test_init(self):
-        # Arrange
+    """Tests for the Fruits360DataModule class."""
+
+    def test_init(self) -> None:
+        """Test initialization of Fruits360DataModule."""
         data_dir = os.path.join("data", "raw", "fruits_360")
         train_val_test_split = (42_692, 25_000, 22_688)
         batch_size = 64
@@ -23,8 +27,8 @@ class TestFruits360DataModule:
         assert datamodule.data_val is None
         assert datamodule.data_test is None
 
-    def test_num_classes(self):
-        # Arrange
+    def test_num_classes(self) -> None:
+        """Test num_classes property."""
         datamodule = Fruits360DataModule()
 
         # Act
