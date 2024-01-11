@@ -28,3 +28,8 @@ jobs:
       run: |
         pip install pytest
         pytest -v
+    - name: Test coverage
+      run: |
+        pip install coverage
+        coverage run -m pytest ./tests
+        coverage report -m
