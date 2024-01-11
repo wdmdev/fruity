@@ -38,7 +38,7 @@ def main(top_k: int, ckpt_path: str, data_dir: str, batch_size: int) -> None:
     state_dict = check_point["state_dict"]
     # Remove 'net.' prefix in state_dict
     state_dict = {k.replace("net.", ""): v for k, v in state_dict.items()}
-    model = timm.models.create_model("resnet18", pretrained=True, in_chans=3, num_classes=131)
+    model = timm.models.create_model("resnet18", pretrained=False, in_chans=3, num_classes=131)
     model.load_state_dict(state_dict)
 
     model.eval()
