@@ -1,44 +1,4 @@
-# import os
-
-# import torch
-
-# from fruity.models.timm_model import TIMMModule
-
-# class TestTimmModel:
-#     """Tests for the TIMMModule class."""
-
-#     def test_init(self) -> None:
-#         """Test initialization of TIMMModule."""
-#         net = "resnet18"
-#         optimizer = torch.optim.Adam
-#         # Act
-#         model = TIMMModule(net, optimizer)
-
-#         # Assert
-#         assert model.hparams["net"] == net
-#         assert model.hparams["optimizer"] == optimizer
-#         assert model.net is not None
-#         assert model.criterion is not None
-#         assert model.train_acc is not None
-#         assert model.val_acc is not None
-#         assert model.test_acc is not None
-#         assert model.train_loss is not None
-#         assert model.val_loss is not None
-#         assert model.test_loss is not None
-#         assert model.val_acc_best is not None
-#         assert model.predict_transform is not None
-
-#     def test_forward(self) -> None:
-#         """Test forward pass through the network with size 100x100."""
-#         model = TIMMModule("resnet18", torch.optim.Adam)
-#         x = torch.randn(1, 3, 100, 100)
-
-#         # Act
-#         out = model(x)
-
-#         # Assert
-#         assert out.shape == (1, 1000)
-
+"""Test code for timm_model.py."""
 
 import torch
 from unittest.mock import Mock
