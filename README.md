@@ -107,3 +107,14 @@ Description of the Hydra config folder structure:
 ├── optimizer   <- Settings for the optimizer used in training the model. This can include the type of optimizer (e.g., Adam, SGD), learning rate, weight decay, etc.
 └── scheduler   <- Scheduler configurations, such as step size, gamma value for learning rate decay, and other scheduler-specific parameters.
 ```
+
+### Tests
+
+* Run tests using command line input, from the root directory of the project: 
+```bash
+coverage run --source=fruity -m pytest tests/
+```
+* Generate coverage report: 
+```bash
+coverage report -m
+```
