@@ -183,3 +183,4 @@ fruity/logs/
 
 # Custom includes
 !conf/env/
+app/backend/models/
