@@ -12,11 +12,11 @@ import os
 from fastapi import FastAPI, File, UploadFile
 from PIL import Image
 from typing import Mapping
+import json
 
 import torch
 from torchvision import transforms
 import timm
-from fruity.datamodules.fruits360 import Fruits360
 from starlette.responses import RedirectResponse
 
 # Initialize the FastAPI application
@@ -33,8 +33,6 @@ def load_model() -> timm.models:
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    train_dataset = Fruits360("../../data/raw/fruits_360", train=True)
-
     # load model from check_point state_dict
     check_point = torch.load("models/model.ckpt", map_location=device)
     state_dict = check_point["state_dict"]
@@ -42,7 +40,15 @@ def load_model() -> timm.models:
     state_dict = {k.replace("net.", ""): v for k, v in state_dict.items()}
     model = timm.models.create_model("resnet18", pretrained=False, in_chans=3, num_classes=131)
     model.load_state_dict(state_dict)
-    model.idx_to_class = train_dataset.idx_to_class
+
+    # Hack to get the idx_to_class mapping
+    with open("idx_to_class.json", "r") as f:
+        # load json with key as int and value as string
+        mapping = json.load(f)
+        # convert key to int
+        mapping = {int(k): v for k, v in mapping.items()}
+        model.idx_to_class = mapping
+
     model.preprocess = transforms.Compose(
         [
             transforms.ToTensor(),
