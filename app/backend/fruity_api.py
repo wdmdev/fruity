@@ -17,6 +17,7 @@ import torch
 from torchvision import transforms
 import timm
 from fruity.datamodules.fruits360 import Fruits360
+from starlette.responses import RedirectResponse
 
 # Initialize the FastAPI application
 app = FastAPI()
@@ -35,7 +36,7 @@ def load_model() -> timm.models:
     train_dataset = Fruits360("../../data/raw/fruits_360", train=True)
 
     # load model from check_point state_dict
-    check_point = torch.load("model.ckpt", map_location=device)
+    check_point = torch.load("models/model.ckpt", map_location=device)
     state_dict = check_point["state_dict"]
     # Remove 'net.' prefix in state_dict
     state_dict = {k.replace("net.", ""): v for k, v in state_dict.items()}
@@ -55,10 +56,10 @@ CLASSIFICATION_MODEL: timm.models = load_model()
 
 
 # Endpoints
-@app.get("/")
-async def root() -> Mapping[str, str]:
-    """Root endpoint."""
-    return {"message": "Hello World"}
+@app.get("/", include_in_schema=False)
+async def redirect_to_docs() -> RedirectResponse:
+    """Redirect to the API documentation."""
+    return RedirectResponse(url="/docs")
 
 
 # Fruit classification endpoint for classifying a single food image
