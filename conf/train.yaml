@@ -10,6 +10,7 @@ defaults:
   - trainer: default.yaml
   - paths: default.yaml
   - hydra: default.yaml
+  - wandb: wandb.yaml
 
   # experiment configs allow for version control of specific hyperparameters
   # e.g. best hyperparameters for given model and datamodule

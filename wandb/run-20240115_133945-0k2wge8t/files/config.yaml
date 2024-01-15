@@ -1,0 +1,71 @@
+wandb_version: 1
+
+defaults:
+  desc: null
+  value:
+  - _self_
+  - datamodule: fruits_360.yaml
+  - model: timm_model.yaml
+  - callbacks: default.yaml
+  - trainer: default.yaml
+  - paths: default.yaml
+  - hydra: default.yaml
+  - wandb: wandb.yaml
+  - experiment: null
+  - hparams_search: null
+  - optional local: default.yaml
+  - debug: null
+task_name:
+  desc: null
+  value: train
+tags:
+  desc: null
+  value:
+  - dev
+train:
+  desc: null
+  value: true
+test:
+  desc: null
+  value: true
+ckpt_path:
+  desc: null
+  value: null
+seed:
+  desc: null
+  value: null
+_wandb:
+  desc: null
+  value:
+    python_version: 3.10.13
+    cli_version: 0.16.2
+    framework: lightning
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1705322385.285929
+    t:
+      1:
+      - 1
+      - 9
+      - 41
+      - 50
+      - 55
+      - 103
+      2:
+      - 1
+      - 9
+      - 41
+      - 49
+      - 50
+      - 55
+      - 63
+      - 103
+      3:
+      - 16
+      - 23
+      4: 3.10.13
+      5: 0.16.2
+      8:
+      - 3
+      - 5
+      13: windows-amd64
