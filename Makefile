@@ -40,6 +40,14 @@ clean:
 train: requirements
 	$(PYTHON_INTERPRETER) src/fruity/train.py
 
+# Serve API
+serve_api: 
+	cd app/backend && uvicorn fruity_api:app --reload
+
+# Check pre-commit hooks
+pre-commit:
+	pre-commit run --all-files
+
 #################################################################################
 # Documentation RULES                                                           #
 #################################################################################
