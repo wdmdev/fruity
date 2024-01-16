@@ -1,6 +1,6 @@
 """Fruits360 dataset."""
 import os
-from typing import Optional, Tuple, Callable
+from typing import Optional, Tuple, Callable, Union
 
 from pytorch_lightning import LightningDataModule
 import torch
@@ -69,7 +69,8 @@ class Fruits360DataModule(LightningDataModule):
         data_dir: str = os.path.join("data", "raw", "fruits_360"),
         train_val_test_split: Tuple[int, int, int] = (42_692, 25_000, 22_688),
         batch_size: int = 64,
-        num_workers: int = 0,
+        num_workers: Union[str, int] = 0,
+        persistent_workers: bool = False,
         pin_memory: bool = False,
     ) -> None:
         """LightningDataModule for Kaggle Fruits 360 dataset.
@@ -80,7 +81,8 @@ class Fruits360DataModule(LightningDataModule):
             train_val_test_split (tuple):   Tuple of ints with lengths of train, val and test
                                             datasets.
             batch_size (int):               Size of batch.
-            num_workers (int):              How many subprocesses to use for data loading.
+            num_workers (int | str):        How many subprocesses to use for data loading.
+            persistent_workers (int): Whether to keep the workers after the first initialization.
             pin_memory (bool):              Whether to copy tensors into CUDA pinned memory.
         """
         super().__init__()
@@ -88,6 +90,8 @@ class Fruits360DataModule(LightningDataModule):
         # this line allows to access init params with 'self.hparams' attribute
         # also ensures init params will be stored in ckpt
         self.save_hyperparameters(logger=False)
+        if self.hparams.num_workers == "max":
+            self.hparams.num_workers = torch.multiprocessing.cpu_count()
 
         self.transforms = transforms.Compose(
             [
@@ -160,6 +164,7 @@ class Fruits360DataModule(LightningDataModule):
             batch_size=self.hparams.batch_size,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,
+            persistent_workers=self.hparams.persistent_workers,
             shuffle=True,
         )
 
@@ -170,6 +175,7 @@ class Fruits360DataModule(LightningDataModule):
             batch_size=self.hparams.batch_size,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,
+            persistent_workers=self.hparams.persistent_workers,
             shuffle=False,
         )
 
@@ -180,5 +186,6 @@ class Fruits360DataModule(LightningDataModule):
             batch_size=self.hparams.batch_size,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,
+            persistent_workers=self.hparams.persistent_workers,
             shuffle=False,
         )

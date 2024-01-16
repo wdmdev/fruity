@@ -1,0 +1,29 @@
+program: src/fruity/train.py
+method: bayes
+metric:
+  goal: maximize
+  name: val/acc
+
+parameters:
+  model.optimizer.lr:
+    min: 0.0001
+    max: 0.1
+  model.optimizer.weight_decay:
+    min: 0.0
+    max: 0.1
+  local.max_epochs:
+    min: 5
+    max: 20
+  datamodule.batch_size:
+    min: 32
+    max: 256
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - ${args_no_hyphens}
+
+# To run a hyperparameter sweep, do
+# wandb sweep --project fruity conf/sweep.yml
+# wandb agent fruity/fruity/SWEEPID
