@@ -23,3 +23,7 @@ command:
   - ${interpreter}
   - ${program}
   - ${args_no_hyphens}
+
+# To run a hyperparameter sweep, do
+# wandb sweep --project fruity conf/sweep.yml
+# wandb agent fruity/fruity/SWEEPID
