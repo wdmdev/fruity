@@ -5,20 +5,18 @@ metric:
   name: val/acc
 
 parameters:
-  train: 
-    values: [True, False]
-  test:
-    values: [True, False]
-  model:
-    parameters:
-      value:
-        min: 1
-        max: 10
-      optimizer:
-        parameters:        
-          lr:
-            min: 0.0001
-            max: 0.1
+  model.optimizer.lr:
+    min: 0.0001
+    max: 0.1
+  model.optimizer.weight_decay:
+    min: 0.0
+    max: 0.1
+  local.max_epochs:
+    min: 5
+    max: 20
+  datamodule.batch_size:
+    min: 32
+    max: 256
 
 command:
   - ${env}
