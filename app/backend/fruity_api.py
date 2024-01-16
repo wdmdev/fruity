@@ -8,7 +8,6 @@ The API provides endpoints for the following:
 - Fruit classification using a pre-trained TIMM model
 """
 
-import os
 from fastapi import FastAPI, File, UploadFile
 from PIL import Image
 from typing import Mapping
@@ -81,20 +80,17 @@ async def classify_fruit(
     -------
         dict: A dictionary containing the classification result.
     """
-    # Save the image to disk
-    filename = file.filename
-    file_bytes = await file.read()
-    with open(filename, "wb") as f:
-        f.write(file_bytes)
+    if file.content_type not in ["image/png", "image/jpeg", "image/jpg"]:
+        raise ValueError("Invalid file type. Must be png or jpeg.")
+
+    # Load the image
+    file.file.seek(0)  # reset file pointer
+    img = Image.open(file.file)
 
     # Classify the image
-    img = Image.open(filename)
     img = CLASSIFICATION_MODEL.preprocess(img)
     img = img.unsqueeze(0)  # add batch dimension
     label_id = torch.argmax(CLASSIFICATION_MODEL(img)).item()
     result = CLASSIFICATION_MODEL.idx_to_class[label_id]
-
-    # Delete the image from disk
-    os.remove(filename)
 
     return {"result": result}

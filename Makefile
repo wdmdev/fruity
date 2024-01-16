@@ -45,8 +45,11 @@ serve_api:
 	cd app/backend && uvicorn fruity_api:app --reload
 
 #Build fastapi docker image
-build_api_image:
-	docker build -t fruity_api -f dockerfiles/api.dockerfile .
+build_local_api_image:
+	docker build -t fruity_api -f dockerfiles/local.api.dockerfile .
+
+build_gc_api_image:
+	docker build -t fruity_api -f dockerfiles/gc.api.dockerfile .
 
 # Run fastapi docker image
 run_api_image:
