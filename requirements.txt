@@ -13,5 +13,6 @@ rich==13.7.0
 ruff==0.1.11
 pytest==7.4.4
 coverage==7.4.0
+wandb==0.16.2
 fastapi==0.108.0
 streamlit==1.30.0
