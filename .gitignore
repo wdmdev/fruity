@@ -185,9 +185,6 @@ fruity/logs/
 !conf/env/
 app/backend/models/
 
-# Ignore wandb local log files
-wandb/
-
 # Weird numbered files that keep coming back, reporting the status of pip installs
 2.5
 2.8.2
