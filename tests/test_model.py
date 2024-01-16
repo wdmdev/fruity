@@ -4,6 +4,7 @@ import torch
 from fruity.models.timm_model import create_model, TIMMModule
 
 
+
 def test_create_model() -> None:
     """Test model creating function."""
     # Setup
