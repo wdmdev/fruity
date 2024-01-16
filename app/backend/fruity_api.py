@@ -35,7 +35,8 @@ def load_model() -> timm.models:
 
     # load model from check_point state_dict
     model = timm.models.create_model("resnet18", pretrained=False, in_chans=3, num_classes=131)
-    state_dict = torch.load("models/model.pth", map_location=device)
+
+    state_dict = torch.load("/mnt/fruity-model-registry/model.pth", map_location=device)
     model.load_state_dict(state_dict)
 
     # Hack to get the idx_to_class mapping
