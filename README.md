@@ -11,6 +11,12 @@
 ### Project Goal
 The primary objective of this project is to develop a robust, accurate, and reliable machine learning model dedicated to classifying a diverse array of fruits and vegetables.
 
+### Frontend DEMO
+The functionality of this project can be demonstrated using the Streamlit frontend. To run the frontend, use the following command from the root directory of the project:
+```bash
+streamlit run app/frontend/streamlit_frontend.py
+```
+
 ### Third-party Framework - TIMM
 Our project will use the capabilities of the [`timm`](https://github.com/rwightman/pytorch-image-models) (PyTorch Image Models) framework, a rich repository of pre-trained deep neural network models and scripts designed for PyTorch. TIMM's comprehensive selection of models, tailored for image data, presents an ideal foundation for our classification objectives. We plan to utilize TIMM in several key areas:
 
