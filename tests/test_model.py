@@ -4,7 +4,8 @@ import torch
 from fruity.models.timm_model import create_model, TIMMModule
 
 
-def test_create_model():
+
+def test_create_model() -> None:
     """Test model creating function."""
     # Setup
     model_name = "resnet18"  # replace with a model name from timm
@@ -18,7 +19,7 @@ def test_create_model():
     assert result is not None
 
 
-def test_timm_module():
+def test_timm_module() -> None:
     """Test TIMMModule class."""
     # Setup
     model = create_model("resnet18", 3, 10)  # replace with a model name from timm
