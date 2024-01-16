@@ -1,12 +1,10 @@
 """Training script for the model."""
-import os
 from typing import List, Optional, Tuple, Mapping, Any
 
 import hydra
 import yaml
 import wandb
 import pytorch_lightning as pl
-import omegaconf
 from omegaconf import DictConfig
 from pytorch_lightning import Callback, LightningDataModule, LightningModule, Trainer
 
@@ -79,19 +77,18 @@ def main(cfg: DictConfig) -> Optional[float]:
     -------
         Optional[float]: Optimized metric value.
     """
-    
     # Do wandb logging if the run flag is set
     if cfg.logging.run:
         with open(hydra.utils.to_absolute_path("conf/train.yaml"), "r") as file:
             wandb_config = yaml.safe_load(file)
-        
+
         _ = wandb.init(entity=cfg.logging.entity, project=cfg.logging.project, config=wandb_config)
 
     metric_dict, _ = train(cfg)
 
     # safely retrieve metric value for hydra-based hyperparameter optimization
     metric_value = utils.get_metric_value(metric_dict=metric_dict, metric_name=cfg.get("optimized_metric"))
-    
+
     if cfg.logging.run:
         wandb.log(metric_dict)
 
