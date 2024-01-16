@@ -34,11 +34,8 @@ def load_model() -> timm.models:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # load model from check_point state_dict
-    check_point = torch.load("models/model.ckpt", map_location=device)
-    state_dict = check_point["state_dict"]
-    # Remove 'net.' prefix in state_dict
-    state_dict = {k.replace("net.", ""): v for k, v in state_dict.items()}
     model = timm.models.create_model("resnet18", pretrained=False, in_chans=3, num_classes=131)
+    state_dict = torch.load("models/model.pth", map_location=device)
     model.load_state_dict(state_dict)
 
     # Hack to get the idx_to_class mapping
