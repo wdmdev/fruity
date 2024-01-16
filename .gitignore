@@ -183,6 +183,7 @@ fruity/logs/
 
 # Custom includes
 !conf/env/
+# ignore all files in app/backend/models except for model.pth
 app/backend/models/
 
 # Weird numbered files that keep coming back, reporting the status of pip installs

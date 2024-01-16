@@ -1,3 +1,4 @@
+# Image for Google Cloud Run deployment
 # Use an official Python runtime as a parent image
 FROM python:3.10-slim as builder
 
@@ -9,6 +10,11 @@ COPY ./app/backend /app
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt && rm -rf /root/.cache
+# Install gcsfuse for Google Cloud Storage access to model
+RUN apt-get update && apt-get install -y gcsfuse
+# Create a directory for the bucket
+RUN mkdir /mnt/fruity-model-registry
+
 
 # Start a new stage
 FROM python:3.10-slim
@@ -25,4 +31,4 @@ COPY --from=builder /app /app
 EXPOSE 80
 
 # Run app.py when the container launches
-CMD ["uvicorn", "fruity_api:app", "--host", "0.0.0.0", "--port", "80"]
+CMD sh -c 'gcsfuse my-gcs-bucket /mnt/my-gcs-bucket && uvicorn your_fastapi_app:app --host 0.0.0.0 --port $PORT'
