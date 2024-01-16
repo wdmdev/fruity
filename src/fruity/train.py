@@ -79,17 +79,21 @@ def main(cfg: DictConfig) -> Optional[float]:
     -------
         Optional[float]: Optimized metric value.
     """
-    # (print(cfg["model"]["optimizer"]["lr"])
-    with open(hydra.utils.to_absolute_path("conf/train.yaml"), "r") as file:
-        wandb_config = yaml.safe_load(file)
     
-    run = wandb.init(entity=cfg.logging.entity, project=cfg.logging.project, config=wandb_config)
+    # Do wandb logging if the run flag is set
+    if cfg.logging.run:
+        with open(hydra.utils.to_absolute_path("conf/train.yaml"), "r") as file:
+            wandb_config = yaml.safe_load(file)
+        
+        _ = wandb.init(entity=cfg.logging.entity, project=cfg.logging.project, config=wandb_config)
 
     metric_dict, _ = train(cfg)
 
     # safely retrieve metric value for hydra-based hyperparameter optimization
     metric_value = utils.get_metric_value(metric_dict=metric_dict, metric_name=cfg.get("optimized_metric"))
-    wandb.log(metric_dict)
+    
+    if cfg.logging.run:
+        wandb.log(metric_dict)
 
     # return optimized metric
     return metric_value
