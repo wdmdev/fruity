@@ -83,7 +83,7 @@ def main(cfg: DictConfig) -> Optional[float]:
     with open(hydra.utils.to_absolute_path("conf/train.yaml"), "r") as file:
         wandb_config = yaml.safe_load(file)
     
-    run = wandb.init(entity=cfg.wandb.entity, project=cfg.wandb.project, config=wandb_config)
+    run = wandb.init(entity=cfg.logging.entity, project=cfg.logging.project, config=wandb_config)
 
     metric_dict, _ = train(cfg)
 
