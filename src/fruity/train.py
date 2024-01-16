@@ -28,6 +28,8 @@ def train(cfg: DictConfig) -> Tuple[Mapping[str, Any], Mapping[str, Any]]:
     if cfg.get("seed"):
         pl.seed_everything(cfg.seed, workers=True)
 
+    cfg.datamodule.num_workers = os.cpu_count()
+
     datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule)
 
     model: LightningModule = hydra.utils.instantiate(cfg.model)
