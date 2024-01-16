@@ -82,6 +82,7 @@ class Fruits360DataModule(LightningDataModule):
                                             datasets.
             batch_size (int):               Size of batch.
             num_workers (int | str):        How many subprocesses to use for data loading.
+            persistent_workers (int): Whether to keep the workers after the first initialization.
             pin_memory (bool):              Whether to copy tensors into CUDA pinned memory.
         """
         super().__init__()
