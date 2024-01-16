@@ -1,4 +1,5 @@
 _target_: fruity.models.timm_model.TIMMModule
+value: 1
 
 optimizer:
   _target_: torch.optim.Adam

@@ -1,0 +1,27 @@
+program: src/fruity/train.py
+method: bayes
+metric:
+  goal: maximize
+  name: val/acc
+
+parameters:
+  train: 
+    values: [True, False]
+  test:
+    values: [True, False]
+  model:
+    parameters:
+      value:
+        min: 1
+        max: 10
+      optimizer:
+        parameters:        
+          lr:
+            min: 0.0001
+            max: 0.1
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - ${args_no_hyphens}

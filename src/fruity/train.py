@@ -79,10 +79,7 @@ def main(cfg: DictConfig) -> Optional[float]:
     -------
         Optional[float]: Optimized metric value.
     """
-    # wandb.config = omegaconf.OmegaConf.to_container(
-    #     cfg, resolve=True, throw_on_missing=True
-    # )
-
+    # (print(cfg["model"]["optimizer"]["lr"])
     with open(hydra.utils.to_absolute_path("conf/train.yaml"), "r") as file:
         wandb_config = yaml.safe_load(file)
     
