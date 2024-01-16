@@ -1,10 +1,10 @@
 """Test code for timm_model.py."""
 
 import torch
-from unittest.mock import Mock
 from fruity.models.timm_model import create_model, TIMMModule
 
 def test_create_model():
+    """Test model creating function."""
     # Setup
     model_name = 'resnet18'  # replace with a model name from timm
     input_ch = 3
@@ -17,6 +17,7 @@ def test_create_model():
     assert result is not None
 
 def test_timm_module():
+    """Test TIMMModule class."""
     # Setup
     model = create_model('resnet18', 3, 10)  # replace with a model name from timm
     optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
