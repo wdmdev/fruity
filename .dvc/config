@@ -1,5 +1,5 @@
 [core]
-    remote = myremote
-['remote "myremote"']
-    url = gs://fruity_data/
+    remote = gcs
+['remote "gcs"']
+    url = gs://fruity2
     version_aware = true
