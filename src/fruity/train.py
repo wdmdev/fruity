@@ -1,5 +1,4 @@
 """Training script for the model."""
-import os
 from typing import List, Optional, Tuple, Mapping, Any
 
 import hydra
