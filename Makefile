@@ -40,6 +40,22 @@ clean:
 train: requirements
 	$(PYTHON_INTERPRETER) src/fruity/train.py
 
+# Serve API
+serve_api: 
+	cd app/backend && uvicorn fruity_api:app --reload
+
+#Build fastapi docker image
+build_api_image:
+	docker build -t fruity_api -f dockerfiles/api.dockerfile .
+
+# Run fastapi docker image
+run_api_image:
+	docker run -p 80:80 fruity_api
+
+# Check pre-commit hooks
+pre-commit:
+	pre-commit run --all-files
+
 #################################################################################
 # Documentation RULES                                                           #
 #################################################################################
