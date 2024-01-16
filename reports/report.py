@@ -1,4 +1,4 @@
-# run following commands to install requirements
+"""run following commands to install requirements."""
 # pip install click
 # pip install markdown
 
