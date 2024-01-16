@@ -3,10 +3,11 @@
 import torch
 from fruity.models.timm_model import create_model, TIMMModule
 
+
 def test_create_model():
     """Test model creating function."""
     # Setup
-    model_name = 'resnet18'  # replace with a model name from timm
+    model_name = "resnet18"  # replace with a model name from timm
     input_ch = 3
     num_cls = 10
 
@@ -16,10 +17,11 @@ def test_create_model():
     # Verify
     assert result is not None
 
+
 def test_timm_module():
     """Test TIMMModule class."""
     # Setup
-    model = create_model('resnet18', 3, 10)  # replace with a model name from timm
+    model = create_model("resnet18", 3, 10)  # replace with a model name from timm
     optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
 
     module = TIMMModule(model, optimizer)
@@ -41,21 +43,21 @@ def test_timm_module():
 
     # Test training_step
     result = module.training_step(batch, 0)
-    assert 'loss' in result
-    assert 'preds' in result
-    assert 'targets' in result
+    assert "loss" in result
+    assert "preds" in result
+    assert "targets" in result
 
     # Test validation_step
     result = module.validation_step(batch, 0)
-    assert 'loss' in result
-    assert 'preds' in result
-    assert 'targets' in result
+    assert "loss" in result
+    assert "preds" in result
+    assert "targets" in result
 
     # Test test_step
     result = module.test_step(batch, 0)
-    assert 'loss' in result
-    assert 'preds' in result
-    assert 'targets' in result
+    assert "loss" in result
+    assert "preds" in result
+    assert "targets" in result
 
     # # Test configure_optimizers
     # result = module.configure_optimizers()

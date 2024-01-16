@@ -4,6 +4,7 @@ import streamlit as st
 from PIL import Image
 import io
 
+
 def main():
     """Start the frontend."""
     st.title("DEMO: fruity classification")
@@ -59,6 +60,7 @@ def process_image(uploaded_file, image_label):
 
         # For demonstration, just displaying the image size
         st.write("Image size: ", image.size)
+
 
 if __name__ == "__main__":
     main()
