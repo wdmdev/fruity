@@ -7,7 +7,7 @@ if __name__ == "__main__":
     client = storage.Client()
 
     # Get the bucket
-    bucket = client.get_bucket("fruity-models")
+    bucket = client.get_bucket("fruity-model-registry")
 
     # Get the blob
     blob = bucket.get_blob("model.pth")
