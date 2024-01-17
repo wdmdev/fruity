@@ -40,7 +40,7 @@ dvcfood:
 dvcfruit:
 	dvc pull
 	sudo apt install p7zip-full
-	7z x fruit_360.7z -odata/raw
+	7z x fruits_360.7z -odata/raw
 
 
 
