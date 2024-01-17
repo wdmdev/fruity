@@ -1,66 +1,130 @@
-"""Streamlit frontend for the Fruity app."""
-import os
+"""Frontend code for the fruity classification application."""
+
 import streamlit as st
-from PIL import Image
-import io
+from streamlit_webrtc import webrtc_streamer
+import cv2
+import os
+import av
+import numpy as np
+import time
+import shutil
+import atexit
+
+from streamlit_webrtc import VideoProcessorBase
 
 
-def main():
+class VideoTransformer(VideoProcessorBase):
+    """VideoTransformer class for processing video frames."""
+
+    frame: np.ndarray = None
+
+    def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
+        """Receive a video frame, process it, and return it.
+
+        Args:
+        ----
+            frame (av.VideoFrame): The video frame to process.
+
+        Returns:
+        -------
+            av.VideoFrame: The processed video frame.
+        """
+        self.process(frame)
+        return frame
+
+    def process(self, frame: av.VideoFrame) -> np.ndarray:
+        """Process a video frame.
+
+        Args:
+        ----
+            frame (av.VideoFrame): The video frame to process.
+
+        Returns:
+        -------
+            np.ndarray: The processed video frame.
+        """
+        self.frame = frame.to_ndarray(format="bgr24")
+        return self.frame
+
+
+def main() -> None:
     """Start the frontend."""
     st.title("DEMO: fruity classification")
 
-    col1, col2, col3 = st.columns(3)
+    # Initialize the images list in the session state if it doesn't exist
+    if "images" not in st.session_state:
+        st.session_state["images"] = []
 
-    with col1:
-        picture1 = st.camera_input("Take picture 1")
-        if picture1:
-            st.image(picture1)
-            process_image(picture1, "Image_1")
+    # Start the webcam
+    webrtc_ctx = webrtc_streamer(key="example", video_processor_factory=VideoTransformer)
 
-    with col2:
-        picture2 = st.camera_input("Take picture 2")
-        if picture2:
-            st.image(picture2)
-            process_image(picture2, "Image_2")
+    # Capture an image from the webcam
+    if st.button("Capture"):
+        if webrtc_ctx.video_processor and webrtc_ctx.video_processor.frame is not None:
+            # Convert the numpy array to a PIL Image
+            img = webrtc_ctx.video_processor.frame
 
-    with col3:
-        picture3 = st.camera_input("Take picture 3")
-        if picture3:
-            st.image(picture3)
-            process_image(picture3, "Image_3")
-    # # Capture picture from webcam
-    # picture = st.camera_input("Take a picture")
+            # Convert the color format from BGR to RGB
+            img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    # # Button to capture a new image
-    # if st.button('Capture New Image'):
-    #     # This will clear the existing image and prompt for a new one
-    #     st.experimental_rerun()
+            # Generate a unique filename for each image
+            timestamp = int(time.time())
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            snapshots_dir = os.path.join(current_dir, "snapshots")
+            image_path = os.path.join(snapshots_dir, f"snapshot_{timestamp}.png")
 
-    # # Display the captured picture
-    # if picture:
-    #     st.image(picture)
-    #     process_image(picture)
+            # Save the image in RGB format
+            cv2.imwrite(image_path, img_rgb)
+
+            # Add the image path to the session state
+            st.session_state["images"].append(image_path)
+
+    # Display the images in a grid
+    if len(st.session_state["images"]) > 0:
+        num_columns = 3
+        num_rows = (len(st.session_state["images"]) - 1) // num_columns + 1
+
+        for row in range(num_rows):
+            cols = st.columns(num_columns)
+            for col in range(num_columns):
+                index = row * num_columns + col
+                if index < len(st.session_state["images"]):
+                    with cols[col]:
+                        # Read the image file into a numpy array
+                        image = cv2.imread(st.session_state["images"][index], cv2.IMREAD_COLOR)
+                        st.image(image)
 
 
-def process_image(uploaded_file, image_label):
-    """Process the image with your ML model and display the results."""
-    # Convert the uploaded file to an image
-    if uploaded_file is not None:
-        # To read image file buffer with PIL:
-        bytes_data = uploaded_file.getvalue()
-        image = Image.open(io.BytesIO(bytes_data))
+def process_image(img: np.ndarray, image_label: str) -> str:
+    """Process the image with your ML model and display the results.
 
-        # Save the image to a temporary directory
-        path = os.path.join(os.path.dirname(__file__), "snapshots", image_label + ".png")
-        image.save(path)
+    Args:
+    ----
+        img (np.ndarray): The image to process.
+        image_label (str): The label for the image.
 
-        # Here you can add the code to process the image with your ML model
-        # For example, predict_label = my_ml_model.predict(image)
-        # st.write("Predicted Label: ", predict_label)
+    Returns:
+    -------
+        str: The image name.
+    """
+    # Convert the image from BGR to RGB
+    rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-        # For demonstration, just displaying the image size
-        st.write("Image size: ", image.size)
+    # Save the image to a temporary directory
+    path = os.path.join(os.path.dirname(__file__), "snapshots", image_label + ".png")
+    cv2.imwrite(path, rgb)
 
+    # Return the image name
+    return path
+
+
+def clear_snapshots() -> None:
+    """Clear the snapshots directory."""
+    shutil.rmtree(os.path.join(os.path.dirname(__file__), "snapshots"))
+    os.makedirs(os.path.join(os.path.dirname(__file__), "snapshots"))
+
+
+atexit.register(clear_snapshots)
 
 if __name__ == "__main__":
     main()
