@@ -54,6 +54,7 @@ COPY --from=builder /app /app
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
+ENV PORT 80
 
 # Run app.py when the container launches
 CMD sh -c 'gcsfuse my-gcs-bucket /mnt/my-gcs-bucket && uvicorn your_fastapi_app:app --host 0.0.0.0 --port $PORT'

@@ -7,8 +7,6 @@ The API provides endpoints for the following:
 - User authentication
 - Fruit classification using a pre-trained TIMM model
 """
-import os
-
 from fastapi import FastAPI, File, UploadFile
 from PIL import Image
 from typing import Mapping
@@ -18,7 +16,6 @@ import torch
 from torchvision import transforms
 import timm
 from starlette.responses import RedirectResponse
-from uvicorn import run
 
 # Initialize the FastAPI application
 app = FastAPI()
@@ -96,7 +93,3 @@ async def classify_fruit(
     result = CLASSIFICATION_MODEL.idx_to_class[label_id]
 
     return {"result": result}
-
-
-if __name__ == "__main__":
-    run("fruity_api:app", host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
