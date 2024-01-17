@@ -70,6 +70,8 @@ class Fruits360DataModule(LightningDataModule):
         train_val_test_split: Tuple[int, int, int] = (42_692, 25_000, 22_688),
         batch_size: int = 64,
         num_workers: int = 0,
+        persistent_workers: bool = True,
+        num_classes: int = 131,
         pin_memory: bool = False,
     ) -> None:
         """LightningDataModule for Kaggle Fruits 360 dataset.
@@ -103,7 +105,7 @@ class Fruits360DataModule(LightningDataModule):
     @property
     def num_classes(self) -> int:
         """Return number of classes."""
-        return 131
+        return self.hparams.num_classes
 
     def prepare_data(self) -> None:
         """Download data if needed.
@@ -160,7 +162,8 @@ class Fruits360DataModule(LightningDataModule):
             batch_size=self.hparams.batch_size,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,
-            shuffle=True,
+            persistent_workers=self.hparams.persistent_workers,
+        shuffle=True,
         )
 
     def val_dataloader(self) -> DataLoader:
@@ -170,6 +173,7 @@ class Fruits360DataModule(LightningDataModule):
             batch_size=self.hparams.batch_size,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,
+            persistent_workers=self.hparams.persistent_workers,
             shuffle=False,
         )
 
@@ -180,5 +184,6 @@ class Fruits360DataModule(LightningDataModule):
             batch_size=self.hparams.batch_size,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,
+            persistent_workers=self.hparams.persistent_workers,
             shuffle=False,
         )

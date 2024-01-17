@@ -1,5 +1,4 @@
 [core]
     remote = gcs
 ['remote "gcs"']
-    url = gs://fruity2
-    version_aware = true
+    url = gs://food101/
