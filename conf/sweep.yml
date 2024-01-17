@@ -11,7 +11,7 @@ parameters:
   model.optimizer.weight_decay:
     min: 0.0
     max: 0.1
-  local.max_epochs:
+  +local.max_epochs:
     min: 5
     max: 20
   datamodule.batch_size:
