@@ -23,34 +23,9 @@ COPY --from=builder /usr/local /usr/local
 # Copy the source code from the 1st stage image
 COPY --from=builder /app /app
 
-# Install gcsfuse for Google Cloud Storage access to model
-#---------------------------------------------
-# Update and install necessary packages
-RUN apt-get update && apt-get install -y \
-    curl \
-    gnupg \
-    lsb-release \
-    # Additional dependencies that might be missing in the slim image
-    fuse
-
-# Add the gcsfuse distribution URL as a package source
-RUN export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s` && \
-    echo "deb https://packages.cloud.google.com/apt $GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list
-
-# Import the GCSFuse public key
-RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-
-# Install gcsfuse
-RUN apt-get update
-RUN apt-get install -y gcsfuse 
-
-# Clean up APT when done
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-# End of gcsfuse installation
-#---------------------------------------------
-
-# Create a directory for the bucket
-RUN mkdir /mnt/fruity-model-registry
+#execute python script setup_models.py
+RUN mkdir models
+RUN python setup_model.py
 
 # Make port 80 available to the world outside this container
 EXPOSE 80

@@ -46,7 +46,7 @@ serve_api:
 
 #Build fastapi docker image
 build_local_api_image:
-	docker build -t fruity_api -f dockerfiles/local.api.dockerfile .
+	docker build -t local_fruity_api -f dockerfiles/local.api.dockerfile .
 
 build_gc_api_image:
 	docker build -t fruity_api -f dockerfiles/gc.api.dockerfile .
