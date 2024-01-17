@@ -1,4 +1,4 @@
-.PHONY: create_environment requirements dev_requirements clean data build_documentation serve_documentation dvcfood dvcfruit
+.PHONY: create_environment requirements dev_requirements clean data build_documentation serve_documentation dvcfood dvcfruit trainfood
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -51,6 +51,9 @@ dvcfruit:
 ## Train model
 train: requirements
 	$(PYTHON_INTERPRETER) src/fruity/train.py
+
+trainfood:
+	$(PYTHON_INTERPRETER) src/fruity/train.py experiment=train_food
 
 #################################################################################
 # Documentation RULES                                                           #
