@@ -73,6 +73,7 @@ class Fruits360DataModule(LightningDataModule):
         persistent_workers: bool = False,
         num_classes: int = 131,
         pin_memory: bool = False,
+        dataset_name: str = "fruits_360",
     ) -> None:
         """LightningDataModule for Kaggle Fruits 360 dataset.
 
@@ -86,6 +87,7 @@ class Fruits360DataModule(LightningDataModule):
             persistent_workers (int): Whether to keep the workers after the first initialization.
             pin_memory (bool):              Whether to copy tensors into CUDA pinned memory.
             num_classes (int):              number of classes in dataset
+            dataset_name (str):             name of the dataset
         """
         super().__init__()
 
