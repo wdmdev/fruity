@@ -33,14 +33,14 @@ clean:
 	find . -type d -name "__pycache__" -delete
 
 dvcfood:
-    dvc pull
-    sudo apt install p7zip-full
-    7z x foods_101.7z -odata/raw
+	dvc pull
+	sudo apt install p7zip-full
+	7z x foods_101.7z -odata/raw
 
 dvcfruit:
-    dvc pull
-    sudo apt install p7zip-full
-    7z x fruit_360.7z -odata/raw
+	dvc pull
+	sudo apt install p7zip-full
+	7z x fruit_360.7z -odata/raw
 
 
 
