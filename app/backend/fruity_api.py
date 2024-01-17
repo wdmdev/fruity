@@ -16,6 +16,7 @@ import torch
 from torchvision import transforms
 import timm
 from starlette.responses import RedirectResponse
+from google.cloud import storage
 
 # Initialize the FastAPI application
 app = FastAPI()
@@ -34,7 +35,19 @@ def load_model() -> timm.models:
     # load model from check_point state_dict
     model = timm.models.create_model("resnet18", pretrained=False, in_chans=3, num_classes=131)
 
-    state_dict = torch.load("models/model.pth", map_location=device)
+    # Create a Cloud Storage client.
+    gcs = storage.Client()
+
+    # Get the bucket that the model is stored in.
+    bucket = gcs.get_bucket("fruity-model-registry")
+
+    # Get the blob with the model.
+    blob = bucket.blob("model.pth")
+
+    # Download the model to a local file.
+    blob.download_to_filename("/tmp/model.pth")
+
+    state_dict = torch.load("/tmp/model.pth", map_location=device)
     model.load_state_dict(state_dict)
 
     # Hack to get the idx_to_class mapping
