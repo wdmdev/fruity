@@ -48,13 +48,15 @@ WORKDIR /app
 
 # Copy only the dependencies installation from the 1st stage image
 COPY --from=builder /usr/local /usr/local
+COPY --from=builder /usr/bin/gcsfuse /usr/bin/gcsfuse
+COPY --from=builder /bin/fusermount /bin/fusermount
+COPY --from=builder /lib/x86_64-linux-gnu/libfuse.so.2 /lib/x86_64-linux-gnu/
 
 # Copy the source code from the 1st stage image
 COPY --from=builder /app /app
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
-ENV PORT 80
 
 # Connect cloud buckt as folder and run api when the container launches
-CMD sh -c 'gcsfuse fruity-model-registry /mnt/fruity-model-registry & uvicorn fruity_api:app --host 0.0.0.0 --port $PORT'
+CMD ["sh", "-c", "gcsfuse fruity-model-registry /mnt/fruity-model-registry && uvicorn fruity_api:app --host 0.0.0.0 --port $PORT"]
