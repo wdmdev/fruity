@@ -46,7 +46,7 @@ class TIMMModule(LightningModule):
         # this line allows to access init params with 'self.hparams' attribute
         # also ensures init params will be stored in ckpt
         self.save_hyperparameters(logger=True, ignore=["net"])
-        self.run_wandb: bool = wandb.config["logging"]["run"]
+        self.run_wandb: bool = wandb.run is not None
 
         self.net = net
 
