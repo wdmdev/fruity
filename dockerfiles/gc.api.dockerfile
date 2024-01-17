@@ -56,4 +56,4 @@ RUN mkdir /mnt/fruity-model-registry
 EXPOSE 80
 
 # Connect cloud buckt as folder and run api when the container launches
-CMD ["sh", "-c", "gcsfuse fruity-model-registry /mnt/fruity-model-registry && uvicorn fruity_api:app --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "uvicorn fruity_api:app --host 0.0.0.0 --port $PORT"]
