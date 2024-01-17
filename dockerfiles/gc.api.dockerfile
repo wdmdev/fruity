@@ -11,6 +11,18 @@ COPY ./app/backend /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt && rm -rf /root/.cache
 
+# Start a new stage
+#---------------------------------------------
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Copy only the dependencies installation from the 1st stage image
+COPY --from=builder /usr/local /usr/local
+
+# Copy the source code from the 1st stage image
+COPY --from=builder /app /app
+
 # Install gcsfuse for Google Cloud Storage access to model
 #---------------------------------------------
 # Update and install necessary packages
@@ -39,21 +51,6 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Create a directory for the bucket
 RUN mkdir /mnt/fruity-model-registry
-
-
-# Start a new stage
-FROM python:3.10-slim
-
-WORKDIR /app
-
-# Copy only the dependencies installation from the 1st stage image
-COPY --from=builder /usr/local /usr/local
-COPY --from=builder /usr/bin/gcsfuse /usr/bin/gcsfuse
-COPY --from=builder /bin/fusermount /bin/fusermount
-COPY --from=builder /lib/x86_64-linux-gnu/libfuse.so.2 /lib/x86_64-linux-gnu/
-
-# Copy the source code from the 1st stage image
-COPY --from=builder /app /app
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
