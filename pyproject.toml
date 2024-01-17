@@ -50,6 +50,7 @@ exclude = [
     "site-packages",
     "venv",
 ]
+extend-exclude = ["reports"]
 line-length = 120
 select = ["I"]  #isort
 

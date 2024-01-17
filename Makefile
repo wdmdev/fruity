@@ -52,8 +52,29 @@ dvcfruit:
 train: requirements
 	$(PYTHON_INTERPRETER) src/fruity/train.py
 
+
 trainfood:
 	$(PYTHON_INTERPRETER) src/fruity/train.py experiment=train_food
+
+
+# Serve API
+serve_api: 
+	cd app/backend && uvicorn fruity_api:app --reload
+
+#Build fastapi docker image
+build_local_api_image:
+	docker build -t fruity_api -f dockerfiles/local.api.dockerfile .
+
+build_gc_api_image:
+	docker build -t fruity_api -f dockerfiles/gc.api.dockerfile .
+
+# Run fastapi docker image
+run_api_image:
+	docker run -p 80:80 fruity_api
+
+# Check pre-commit hooks
+pre-commit:
+	pre-commit run --all-files
 
 #################################################################################
 # Documentation RULES                                                           #

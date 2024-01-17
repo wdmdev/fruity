@@ -11,6 +11,12 @@
 ### Project Goal
 The primary objective of this project is to develop a robust, accurate, and reliable machine learning model dedicated to classifying a diverse array of fruits and vegetables.
 
+### Frontend DEMO
+The functionality of this project can be demonstrated using the Streamlit frontend. To run the frontend, use the following command from the root directory of the project:
+```bash
+streamlit run app/frontend/streamlit_frontend.py
+```
+
 ### Third-party Framework - TIMM
 Our project will use the capabilities of the [`timm`](https://github.com/rwightman/pytorch-image-models) (PyTorch Image Models) framework, a rich repository of pre-trained deep neural network models and scripts designed for PyTorch. TIMM's comprehensive selection of models, tailored for image data, presents an ideal foundation for our classification objectives. We plan to utilize TIMM in several key areas:
 
@@ -106,4 +112,15 @@ Description of the Hydra config folder structure:
 ├── model       <- Model-specific configurations, such as model architecture details, hyperparameters specific to the model, and checkpointing information.
 ├── optimizer   <- Settings for the optimizer used in training the model. This can include the type of optimizer (e.g., Adam, SGD), learning rate, weight decay, etc.
 └── scheduler   <- Scheduler configurations, such as step size, gamma value for learning rate decay, and other scheduler-specific parameters.
+```
+
+### Tests
+
+* Run tests using command line input, from the root directory of the project: 
+```bash
+coverage run --source=fruity -m pytest tests/
+```
+* Generate coverage report: 
+```bash
+coverage report -m
 ```

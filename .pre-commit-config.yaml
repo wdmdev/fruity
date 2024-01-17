@@ -23,3 +23,6 @@ repos:
     - id: mypy
       types: [python]
       args: [--strict, --install-types, --non-interactive, --ignore-missing-imports, --allow-subclassing-any, --allow-untyped-decorators]
+
+#Exclude the reports folder, it is only for handin
+exclude: ^reports/
