@@ -1,4 +1,4 @@
-.PHONY: create_environment requirements dev_requirements clean data build_documentation serve_documentation
+.PHONY: create_environment requirements dev_requirements clean data build_documentation serve_documentation dvcfood dvcfruit trainfood
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -19,6 +19,7 @@ create_environment:
 ## Install Python Dependencies
 requirements:
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
+	$(PYTHON_INTERPRETER) -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 	$(PYTHON_INTERPRETER) -m pip install -e .
 
@@ -31,6 +32,17 @@ clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
+dvcfood:
+	dvc pull
+	sudo apt install p7zip-full
+	7z x foods_101.7z -odata/raw
+
+dvcfruit:
+	dvc pull
+	sudo apt install p7zip-full
+	7z x fruits_360.7z -odata/raw
+
+
 
 #################################################################################
 # PROJECT RULES                                                                 #
@@ -39,6 +51,11 @@ clean:
 ## Train model
 train: requirements
 	$(PYTHON_INTERPRETER) src/fruity/train.py
+
+
+trainfood:
+	$(PYTHON_INTERPRETER) src/fruity/train.py experiment=train_food
+
 
 # Serve API
 serve_api: 
