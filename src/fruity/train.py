@@ -2,7 +2,6 @@
 from typing import List, Optional, Tuple, Mapping, Any
 
 import hydra
-import yaml
 import wandb
 import omegaconf
 import pytorch_lightning as pl
@@ -33,7 +32,7 @@ def train(cfg: DictConfig) -> Tuple[Mapping[str, Any], Mapping[str, Any]]:
     datamodule: LightningDataModule = hydra.utils.instantiate(cfg.datamodule)
 
     model: LightningModule = hydra.utils.instantiate(cfg.model)
-    
+
     logging: LightningModule = hydra.utils.instantiate(cfg.logging)
 
     callbacks: List[Callback] = utils.instantiate_callbacks(cfg.get("callbacks"))
@@ -82,7 +81,7 @@ def main(cfg: DictConfig) -> Optional[float]:
         Optional[float]: Optimized metric value.
     """
     # Do wandb logging if the run flag is set
-    
+
     if cfg.logging.run:
         # with open(hydra.utils.to_absolute_path("conf/train.yaml"), "r") as file:
         #     wandb_config = yaml.safe_load(file)

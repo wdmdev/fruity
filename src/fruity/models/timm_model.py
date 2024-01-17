@@ -1,10 +1,9 @@
 """Module for TIMM models."""
-from typing import Any, Tuple, Mapping, List
+from typing import Any, Tuple, Mapping
 
 import timm
 import torch
 import wandb
-import hydra
 
 # from fairscale.nn import auto_wrap, checkpoint_wrapper, wrap
 from pytorch_lightning import LightningModule
@@ -64,7 +63,7 @@ class TIMMModule(LightningModule):
 
         # for tracking best so far validation accuracy
         self.val_acc_best = MaxMetric()
-        
+
         self.predict_transform = torch.nn.Sequential(
             transforms.Resize([100, 100]),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
@@ -197,13 +196,12 @@ class TIMMModule(LightningModule):
 
     def on_train_epoch_end(self) -> None:
         """Log training metrics at the end of the epoch."""
-        
         train_loss = self.train_loss.compute()
         train_acc = self.train_acc.compute()
-        
+
         self.log("train/loss", train_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
         self.log("train/acc", train_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
-        
+
         if self.run_wandb:
             wandb.log({
                 "train/loss": train_loss,
@@ -212,13 +210,12 @@ class TIMMModule(LightningModule):
 
     def on_test_epoch_end(self) -> None:
         """Log test metrics at the end of the epoch."""
-        
         test_loss = self.test_loss.compute()
         test_acc = self.test_acc.compute()
-        
+
         self.log("test/loss", test_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
         self.log("test/acc", test_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
-        
+
         if self.run_wandb:
             wandb.log({
                 "test/loss": test_loss,
@@ -227,13 +224,12 @@ class TIMMModule(LightningModule):
 
     def on_validation_epoch_end(self) -> None:
         """Log validation metrics at the end of the epoch."""
-
         val_loss = self.val_loss.compute()
         val_acc = self.val_acc.compute()
 
         self.log("val/loss", val_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
         self.log("val/acc", val_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
-        
+
         if self.run_wandb:
             wandb.log({
                 "val/loss": val_loss,

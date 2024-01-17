@@ -34,7 +34,8 @@ def test_train(
     """
     # Setup
     cfg = OmegaConf.create(
-        {"seed": 123, "datamodule": {}, "model": {}, "callbacks": [], "trainer": {}, "train": True, "test": True, "logging": {}}
+        {"seed": 123, "datamodule": {}, "model": {}, "callbacks": [],
+         "trainer": {}, "train": True, "test": True, "logging": {}}
     )
 
     # Mocks
