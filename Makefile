@@ -1,4 +1,4 @@
-.PHONY: create_environment requirements dev_requirements clean data build_documentation serve_documentation
+.PHONY: create_environment requirements dev_requirements clean data build_documentation serve_documentation dvcfood dvcfruit
 
 #################################################################################
 # GLOBALS                                                                       #
