@@ -42,7 +42,35 @@ def main(model_path: str, dataset_path: str) -> None:
 
     for img, label in dataloader:
         preds = model(img).argmax(dim=1)
+        print(preds[:4])
         print((preds == label).to(float).mean())
+
+        model.qconfig = torch.ao.quantization.get_default_qconfig("x86")
+
+        # Fuse the activations to preceding layers, where applicable.
+        # This needs to be done manually depending on the model architecture.
+        # Common fusions include `conv + relu` and `conv + batchnorm + relu`
+        # model_fp32_fused = torch.ao.quantization.fuse_modules(model, [['conv1']])
+
+        # Prepare the model for static quantization. This inserts observers in
+        # the model that will observe activation tensors during calibration.
+        model_fp32_prepared = torch.ao.quantization.prepare(model)
+
+        # calibrate the prepared model to determine quantization parameters for activations
+        # in a real world setting, the calibration would be done with a representative dataset
+
+        model_fp32_prepared(img)
+
+        # Convert the observed model to a quantized model. This does several things:
+        # quantizes the weights, computes and stores the scale and bias value to be
+        # used with each activation tensor, and replaces key operators with quantized
+        # implementations.
+        model_int8 = torch.ao.quantization.convert(model_fp32_prepared)
+
+        # run the model, relevant calculations will happen in int8
+        res = model_int8(img)
+
+        print(res.argmax(dim=1)[:4])
         break
 
 
