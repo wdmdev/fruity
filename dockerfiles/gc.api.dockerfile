@@ -56,5 +56,5 @@ COPY --from=builder /app /app
 EXPOSE 80
 ENV PORT 80
 
-# Run app.py when the container launches
-CMD sh -c 'gcsfuse my-gcs-bucket /mnt/my-gcs-bucket && uvicorn your_fastapi_app:app --host 0.0.0.0 --port $PORT'
+# Connect cloud buckt as folder and run api when the container launches
+CMD sh -c 'gcsfuse fruity-model-registry /mnt/fruity-model-registry && uvicorn fruity_api:app --host 0.0.0.0 --port $PORT'
