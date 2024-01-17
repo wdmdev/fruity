@@ -85,6 +85,7 @@ class Fruits360DataModule(LightningDataModule):
             num_workers (int | str):        How many subprocesses to use for data loading.
             persistent_workers (int): Whether to keep the workers after the first initialization.
             pin_memory (bool):              Whether to copy tensors into CUDA pinned memory.
+            num_classes (int):              number of classes in dataset
         """
         super().__init__()
 
@@ -108,7 +109,7 @@ class Fruits360DataModule(LightningDataModule):
     @property
     def num_classes(self) -> int:
         """Return number of classes."""
-        return self.hparams.num_classes
+        return int(self.hparams.num_classes)
 
     def prepare_data(self) -> None:
         """Download data if needed.
