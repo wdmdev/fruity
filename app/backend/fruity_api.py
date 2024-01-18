@@ -101,7 +101,10 @@ async def classify_fruit(
     img = CLASSIFICATION_MODEL.preprocess(img)
     img = img.unsqueeze(0)  # add batch dimension
     label_id = torch.argmax(CLASSIFICATION_MODEL(img)).item()
-    result = CLASSIFICATION_MODEL.idx_to_class[label_id]
+    if label_id in CLASSIFICATION_MODEL.idx_to_class:
+        result = CLASSIFICATION_MODEL.idx_to_class[label_id]
+    else:
+        result = "Unknown"
 
     return {"result": result}
 
@@ -133,7 +136,10 @@ async def batch_classify_fruit(
         img = CLASSIFICATION_MODEL.preprocess(img)
         img = img.unsqueeze(0)  # add batch dimension
         label_id = torch.argmax(CLASSIFICATION_MODEL(img)).item()
-        result = CLASSIFICATION_MODEL.idx_to_class[label_id]
+        if label_id in CLASSIFICATION_MODEL.idx_to_class:
+            result = CLASSIFICATION_MODEL.idx_to_class[label_id]
+        else:
+            result = "Unknown"
 
         results[file.filename] = result
 
