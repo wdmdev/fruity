@@ -6,8 +6,8 @@ datamodule:
 
 model:
   net.model_name: convnext_base
-  model.lr: 0.0001
-  model.weight_decay: 0.001
+  net.lr: 0.0001
+  net.weight_decay: 0.001
 
 trainer:
   max_epochs: 100
