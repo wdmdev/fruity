@@ -32,31 +32,29 @@ def load_model() -> timm.models:
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # load model from check_point state_dict
-    model = timm.models.create_model("resnet18", pretrained=False, in_chans=3, num_classes=131)
-
     # Create a Cloud Storage client.
     gcs = storage.Client()
-
     # Get the bucket that the model is stored in.
     bucket = gcs.get_bucket("fruity-model-registry")
-
     # Get the blob with the model.
-    blob = bucket.blob("model.pth")
+    model_blob = bucket.blob("convnext_large_foods_101.pth")
+    idx_label_blob = bucket.blob("modelfoods_101.json")
+    # Download the model and label mapping to local files.
+    model_blob.download_to_filename("/tmp/model.pth")
+    idx_label_blob.download_to_filename("/tmp/idx_to_class.json")
 
-    # Download the model to a local file.
-    blob.download_to_filename("/tmp/model.pth")
-
-    state_dict = torch.load("/tmp/model.pth", map_location=device)
-    model.load_state_dict(state_dict)
-
-    # Hack to get the idx_to_class mapping
-    with open("idx_to_class.json", "r") as f:
+    # get the idx_to_class mapping
+    with open("/tmp/idx_to_class.json", "r") as f:
         # load json with key as int and value as string
         mapping = json.load(f)
         # convert key to int
         mapping = {int(k): v for k, v in mapping.items()}
-        model.idx_to_class = mapping
+
+    # load model from check_point state_dict
+    model = timm.models.create_model("convnext_large", pretrained=False, in_chans=3, num_classes=len(mapping))
+    model.idx_to_class = mapping
+    state_dict = torch.load("/tmp/model.pth", map_location=device)
+    model.load_state_dict(state_dict)
 
     model.preprocess = transforms.Compose(
         [
