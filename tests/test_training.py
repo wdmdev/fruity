@@ -51,3 +51,4 @@
 # #     assert "model" in object_dict
 # #     assert "callbacks" in object_dict
 # #     assert "trainer" in object_dict
+

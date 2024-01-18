@@ -3,6 +3,7 @@ from typing import Any, Tuple, Mapping
 
 import timm
 import torch
+import wandb
 
 # from fairscale.nn import auto_wrap, checkpoint_wrapper, wrap
 from pytorch_lightning import LightningModule
@@ -43,7 +44,8 @@ class TIMMModule(LightningModule):
 
         # this line allows to access init params with 'self.hparams' attribute
         # also ensures init params will be stored in ckpt
-        self.save_hyperparameters(logger=False, ignore=["net"])
+        self.save_hyperparameters(logger=True, ignore=["net"])
+        self.run_wandb: bool = wandb.run is not None
 
         self.net = net
 
@@ -117,15 +119,16 @@ class TIMMModule(LightningModule):
 
         self.train_loss(loss)
         self.train_acc(preds, targets)
-        self.log(
-            "train/loss",
-            self.train_loss,
-            on_step=True,
-            on_epoch=True,
-            prog_bar=True,
-            sync_dist=True,
-        )
-        self.log("train/acc", self.train_acc, on_step=True, on_epoch=True, prog_bar=True, sync_dist=True)
+
+        # self.log(
+        #     "train/loss",
+        #     self.train_loss,
+        #     on_step=True,
+        #     on_epoch=True,
+        #     prog_bar=True,
+        #     sync_dist=True,
+        # )
+        # self.log("train/acc", self.train_acc, on_step=True, on_epoch=True, prog_bar=True, sync_dist=True)
 
         # we can return here dict with any tensors
         # and then read it in some callback or in `training_epoch_end()` below
@@ -149,19 +152,12 @@ class TIMMModule(LightningModule):
         # update and log metrics
         self.val_loss(loss)
         self.val_acc(preds, targets)
-        self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
-        self.log("val/acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
-        self.log("hp_metric", self.val_loss, sync_dist=True)
+
+        # self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        # self.log("val/acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        # self.log("hp_metric", self.val_loss, sync_dist=True)
 
         return {"loss": loss, "preds": preds, "targets": targets}
-
-    def on_validation_epoch_end(self) -> None:
-        """Log best so far validation accuracy."""
-        acc = self.val_acc.compute()
-        self.val_acc_best(acc)
-        # log `val_acc_best` as a value through `.compute()` method, instead of as a metric object
-        # otherwise metric would be reset by lightning after each epoch
-        self.log("val/acc_best", self.val_acc_best.compute(), prog_bar=True, sync_dist=True)
 
     def test_step(self, batch: Any, batch_idx: int) -> Mapping[str, torch.Tensor]:
         """Test on batch.
@@ -179,15 +175,16 @@ class TIMMModule(LightningModule):
 
         self.test_loss(loss)
         self.test_acc(preds, targets)
-        self.log(
-            "test/loss",
-            self.test_loss,
-            on_step=False,
-            on_epoch=True,
-            prog_bar=True,
-            sync_dist=True,
-        )
-        self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+
+        # self.log(
+        #     "test/loss",
+        #     self.test_loss,
+        #     on_step=False,
+        #     on_epoch=True,
+        #     prog_bar=True,
+        #     sync_dist=True,
+        # )
+        # self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
 
         return {"loss": loss, "preds": preds, "targets": targets}
 
@@ -196,3 +193,45 @@ class TIMMModule(LightningModule):
         return {
             "optimizer": self.hparams.optimizer(params=self.parameters()),
         }
+
+    def on_train_epoch_end(self) -> None:
+        """Log training metrics at the end of the epoch."""
+        train_loss = self.train_loss.compute()
+        train_acc = self.train_acc.compute()
+
+        self.log("train/loss", train_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("train/acc", train_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+
+        if self.run_wandb:
+            wandb.log({
+                "train/loss": train_loss,
+                "train/acc": train_acc,
+            })
+
+    def on_test_epoch_end(self) -> None:
+        """Log test metrics at the end of the epoch."""
+        test_loss = self.test_loss.compute()
+        test_acc = self.test_acc.compute()
+
+        self.log("test/loss", test_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("test/acc", test_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+
+        if self.run_wandb:
+            wandb.log({
+                "test/loss": test_loss,
+                "test/acc": test_acc,
+            })
+
+    def on_validation_epoch_end(self) -> None:
+        """Log validation metrics at the end of the epoch."""
+        val_loss = self.val_loss.compute()
+        val_acc = self.val_acc.compute()
+
+        self.log("val/loss", val_loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("val/acc", val_acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+
+        if self.run_wandb:
+            wandb.log({
+                "val/loss": val_loss,
+                "val/acc": val_acc,
+            })
