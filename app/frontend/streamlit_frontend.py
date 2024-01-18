@@ -60,8 +60,9 @@ def main() -> None:
     # Start the webcam
     webrtc_ctx = webrtc_streamer(key="example", video_processor_factory=VideoTransformer)
 
+    cols = st.columns([1, 1, 1, 4])
     # Capture an image from the webcam
-    if st.button("Capture"):
+    if cols[0].button("Capture"):
         if webrtc_ctx.video_processor and webrtc_ctx.video_processor.frame is not None:
             # Convert the numpy array to a PIL Image
             img = webrtc_ctx.video_processor.frame
@@ -82,7 +83,7 @@ def main() -> None:
             st.session_state["images"].append(image_path)
 
     # Load the API endpoint from a JSON file
-    with open("config.json", "r") as f:
+    with open(os.path.join(os.path.dirname(__file__), "streamlit_config.json"), "r") as f:
         config = json.load(f)
     api_endpoint = config["api_endpoint"]
 
@@ -90,25 +91,43 @@ def main() -> None:
     snapshots_dir = os.path.join(os.path.dirname(__file__), "snapshots")
     image_paths = glob.glob(os.path.join(snapshots_dir, "*"))
 
+    # Initialize classification_results in st.session_state
+    if "classification_results" not in st.session_state:
+        st.session_state["classification_results"] = {}
+
     # Add a button to send the images to the API endpoint
-    if st.button("Send Images"):
+    if cols[1].button("Classify"):
         # Create a multipart-encoded file upload
         files = [
-            ("images", (os.path.basename(image_path), open(image_path, "rb"), "image/png"))
+            ("files", (os.path.basename(image_path), open(image_path, "rb"), "image/png"))
             for image_path in image_paths
+            if os.path.basename(image_path) not in st.session_state["classification_results"]
         ]
-        response = requests.post(api_endpoint, files=files)
+        if files:
+            response = requests.post(api_endpoint, files=files)
 
-        # Check the response
-        if response.status_code == 200:
-            st.success("Images sent successfully!")
-            response_data = response.json()
-            st.session_state["classification_results"] = response_data["result"]
+            # Check the response
+            if response.status_code == 200:
+                st.success("Images sent successfully!")
+                response_data = response.json()
+                for image_path in image_paths:
+                    image_name = os.path.basename(image_path)
+                    if image_name in response_data:
+                        st.session_state["classification_results"][image_name] = response_data[image_name]
+            else:
+                st.error("Failed to send images.")
         else:
-            st.error("Failed to send images.")
+            st.info("All images have already been classified.")
+
+    # Add a reset button
+    if cols[2].button("Reset"):
+        st.session_state["images"] = []
+        st.session_state["classification_results"] = {}
+        st.info("All snapshots have been removed.")
+        clear_snapshots()
 
     # Display the images in a grid
-    if len(st.session_state["images"]) > 0:
+    if st.session_state["images"]:
         num_columns = 3
         num_rows = (len(st.session_state["images"]) - 1) // num_columns + 1
 
@@ -122,10 +141,9 @@ def main() -> None:
                         image = cv2.imread(st.session_state["images"][index], cv2.IMREAD_COLOR)
                         st.image(image)
                         # Display the classification result under the image
-                        if "classification_results" in st.session_state and index < len(
-                            st.session_state["classification_results"]
-                        ):
-                            st.write(f"Classification: {st.session_state['classification_results'][index]}")
+                        image_name = os.path.basename(st.session_state["images"][index])
+                        if image_name in st.session_state["classification_results"]:
+                            st.write(f"Classification: {st.session_state['classification_results'][image_name]}")
 
 
 def process_image(img: np.ndarray, image_label: str) -> str:
