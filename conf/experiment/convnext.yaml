@@ -14,7 +14,7 @@ model:
     weight_decay: 0.0
 
 trainer:
-  max_epochs: 20
+  max_epochs: 10
   precision: bf16-mixed
 
 # Example of how to run
