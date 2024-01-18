@@ -54,11 +54,12 @@ dvcfruit:
 
 ## Train model
 train:
-	conda activate $(PROJECT_NAME)
+	$(CONDA_ACTIVATE) $(PROJECT_NAME)
 	$(PYTHON_INTERPRETER) src/fruity/train.py
 
 
 trainfood:
+	$(CONDA_ACTIVATE) $(PROJECT_NAME)
 	$(PYTHON_INTERPRETER) src/fruity/train.py experiment=train_food
 
 
