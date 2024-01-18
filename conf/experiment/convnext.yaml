@@ -16,6 +16,8 @@ model:
 trainer:
   max_epochs: 30
   precision: 16-mixed
+  strategy: ddp
+  devices: 2
 
 # Example of how to run
 # python src/fruity/train.py experiment=experiment1
