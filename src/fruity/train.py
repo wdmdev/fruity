@@ -2,8 +2,8 @@
 from typing import List, Optional, Tuple, Mapping, Any
 
 import hydra
-import yaml
 import wandb
+import omegaconf
 import pytorch_lightning as pl
 from omegaconf import DictConfig
 from pytorch_lightning import Callback, LightningDataModule, LightningModule, Trainer
@@ -33,6 +33,8 @@ def train(cfg: DictConfig) -> Tuple[Mapping[str, Any], Mapping[str, Any]]:
 
     model: LightningModule = hydra.utils.instantiate(cfg.model)
 
+    logging: LightningModule = hydra.utils.instantiate(cfg.logging)
+
     callbacks: List[Callback] = utils.instantiate_callbacks(cfg.get("callbacks"))
 
     trainer: Trainer = hydra.utils.instantiate(cfg.trainer)
@@ -43,6 +45,7 @@ def train(cfg: DictConfig) -> Tuple[Mapping[str, Any], Mapping[str, Any]]:
         "model": model,
         "callbacks": callbacks,
         "trainer": trainer,
+        "logging": logging,
         # "metrics": train_metrics,
     }
 
@@ -78,11 +81,12 @@ def main(cfg: DictConfig) -> Optional[float]:
         Optional[float]: Optimized metric value.
     """
     # Do wandb logging if the run flag is set
-    if cfg.logging.run:
-        with open(hydra.utils.to_absolute_path("conf/train.yaml"), "r") as file:
-            wandb_config = yaml.safe_load(file)
 
-        _ = wandb.init(entity=cfg.logging.entity, project=cfg.logging.project, config=wandb_config)
+    if cfg.logging.run:
+        # with open(hydra.utils.to_absolute_path("conf/train.yaml"), "r") as file:
+        #     wandb_config = yaml.safe_load(file)
+        _ = wandb.init(entity=cfg.logging.entity, project=cfg.logging.project)
+        wandb.config.update(omegaconf.OmegaConf.to_container(cfg, resolve=True))
 
     metric_dict, _ = train(cfg)
 
