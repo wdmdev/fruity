@@ -6,7 +6,7 @@ datamodule:
 
 model:
   net:
-    model_name: convnext_large
+    model_name: resnet151
 
   optimizer:
     _target_: torch.optim.AdamW
