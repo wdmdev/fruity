@@ -58,6 +58,7 @@ def load_model() -> timm.models:
 
     model.preprocess = transforms.Compose(
         [
+            transforms.Resize((100, 100)),
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
         ]
