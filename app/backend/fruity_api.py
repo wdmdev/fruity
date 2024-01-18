@@ -7,8 +7,6 @@ The API provides endpoints for the following:
 - User authentication
 - Fruit classification using a pre-trained TIMM model
 """
-
-import os
 from fastapi import FastAPI, File, UploadFile
 from PIL import Image
 from typing import Mapping
@@ -18,6 +16,7 @@ import torch
 from torchvision import transforms
 import timm
 from starlette.responses import RedirectResponse
+from google.cloud import storage
 
 # Initialize the FastAPI application
 app = FastAPI()
@@ -36,7 +35,19 @@ def load_model() -> timm.models:
     # load model from check_point state_dict
     model = timm.models.create_model("resnet18", pretrained=False, in_chans=3, num_classes=131)
 
-    state_dict = torch.load("/mnt/fruity-model-registry/model.pth", map_location=device)
+    # Create a Cloud Storage client.
+    gcs = storage.Client()
+
+    # Get the bucket that the model is stored in.
+    bucket = gcs.get_bucket("fruity-model-registry")
+
+    # Get the blob with the model.
+    blob = bucket.blob("model.pth")
+
+    # Download the model to a local file.
+    blob.download_to_filename("/tmp/model.pth")
+
+    state_dict = torch.load("/tmp/model.pth", map_location=device)
     model.load_state_dict(state_dict)
 
     # Hack to get the idx_to_class mapping
@@ -81,20 +92,17 @@ async def classify_fruit(
     -------
         dict: A dictionary containing the classification result.
     """
-    # Save the image to disk
-    filename = file.filename
-    file_bytes = await file.read()
-    with open(filename, "wb") as f:
-        f.write(file_bytes)
+    if file.content_type not in ["image/png", "image/jpeg", "image/jpg"]:
+        raise ValueError("Invalid file type. Must be png or jpeg.")
+
+    # Load the image
+    file.file.seek(0)  # reset file pointer
+    img = Image.open(file.file)
 
     # Classify the image
-    img = Image.open(filename)
     img = CLASSIFICATION_MODEL.preprocess(img)
     img = img.unsqueeze(0)  # add batch dimension
     label_id = torch.argmax(CLASSIFICATION_MODEL(img)).item()
     result = CLASSIFICATION_MODEL.idx_to_class[label_id]
-
-    # Delete the image from disk
-    os.remove(filename)
 
     return {"result": result}

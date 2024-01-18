@@ -5,3 +5,4 @@ train_val_test_split: [42_692, 25_000, 22_688]
 num_workers: max  # Number of workers to run, or "max" to run all workers
 persistent_workers: True
 pin_memory: True
+num_classes: 131

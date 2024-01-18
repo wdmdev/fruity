@@ -1,0 +1,4 @@
+#@package __global__
+defaults:
+  - override /datamodule: foods_101
+

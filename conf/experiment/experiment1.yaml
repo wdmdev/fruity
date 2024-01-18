@@ -1,0 +1,12 @@
+#@package __global__
+
+datamodule.num_workers: 8
+datamodule.batch_size: 28
+datamodule.persistent_workers: True
+datamodule.pin_memory: True
+
+model.lr: 0.001
+model.weight_decay: 0.0
+
+# Example of how to run
+# python src/fruity/train.py experiment=experiment1

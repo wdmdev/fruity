@@ -46,7 +46,6 @@ class VideoTransformer(VideoProcessorBase):
         self.frame = frame.to_ndarray(format="bgr24")
         return self.frame
 
-
 def main() -> None:
     """Start the frontend."""
     st.title("DEMO: fruity classification")
@@ -122,7 +121,6 @@ def clear_snapshots() -> None:
     """Clear the snapshots directory."""
     shutil.rmtree(os.path.join(os.path.dirname(__file__), "snapshots"))
     os.makedirs(os.path.join(os.path.dirname(__file__), "snapshots"))
-
 
 atexit.register(clear_snapshots)
 

@@ -186,9 +186,14 @@ fruity/logs/
 # ignore all files in app/backend/models except for model.pth
 app/backend/models/
 
+# Ignore wandb local log
+/wandb
+
 # Weird numbered files that keep coming back, reporting the status of pip installs
 2.5
 2.8.2
+/foods_101.7z
+/fruits_360.7z
 
 # Streamlit frontend DEMO
 app/frontend/snapshots/*
