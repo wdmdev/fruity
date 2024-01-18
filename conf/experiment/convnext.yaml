@@ -15,7 +15,7 @@ model:
 
 trainer:
   max_epochs: 10
-  precision: bf16-mixed
+  precision: 16-mixed
 
 # Example of how to run
 # python src/fruity/train.py experiment=experiment1
