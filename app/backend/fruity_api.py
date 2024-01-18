@@ -51,7 +51,7 @@ def load_model() -> timm.models:
         mapping = {int(k): v for k, v in mapping.items()}
 
     # load model from check_point state_dict
-    model = timm.models.create_model("convnext_large", pretrained=False, in_chans=3, num_classes=len(mapping))
+    model = timm.models.create_model("convnext_large", pretrained=False, in_chans=3, num_classes=131)
     model.idx_to_class = mapping
     state_dict = torch.load("/tmp/model.pth", map_location=device)
     model.load_state_dict(state_dict)
