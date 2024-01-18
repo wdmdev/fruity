@@ -9,7 +9,7 @@ The API provides endpoints for the following:
 """
 from fastapi import FastAPI, File, UploadFile
 from PIL import Image
-from typing import Mapping
+from typing import List, Mapping
 import json
 
 import torch
@@ -106,3 +106,37 @@ async def classify_fruit(
     result = CLASSIFICATION_MODEL.idx_to_class[label_id]
 
     return {"result": result}
+
+
+@app.post("/batch/classification")
+async def batch_classify_fruit(
+    files: List[UploadFile] = File(...),
+) -> Mapping[str, str]:
+    """Classify a batch of food images.
+
+    Args:
+    ----
+        files (List[UploadFile]): The food images to classify.
+
+    Returns:
+    -------
+        dict: A dictionary containing the classification results.
+    """
+    results = {}
+    for file in files:
+        if file.content_type not in ["image/png", "image/jpeg", "image/jpg"]:
+            raise ValueError("Invalid file type. Must be png or jpeg.")
+
+        # Load the image
+        file.file.seek(0)  # reset file pointer
+        img = Image.open(file.file)
+
+        # Classify the image
+        img = CLASSIFICATION_MODEL.preprocess(img)
+        img = img.unsqueeze(0)  # add batch dimension
+        label_id = torch.argmax(CLASSIFICATION_MODEL(img)).item()
+        result = CLASSIFICATION_MODEL.idx_to_class[label_id]
+
+        results[file.filename] = result
+
+    return results

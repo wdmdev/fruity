@@ -196,3 +196,4 @@ app/backend/models/
 # Streamlit frontend DEMO
 app/frontend/snapshots/*
 !app/frontend/snapshots/.gitkeep
+app/frontend/streamlit_config.json
