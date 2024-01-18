@@ -6,7 +6,7 @@ datamodule:
 
 model:
   net:
-    model_name: resnet151
+    model_name: resnet152
 
   optimizer:
     _target_: torch.optim.AdamW
