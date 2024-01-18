@@ -5,7 +5,7 @@ from PIL import Image
 import io
 
 
-def main():
+def main() -> None:
     """Start the frontend."""
     st.title("DEMO: fruity classification")
 
@@ -42,8 +42,14 @@ def main():
     #     process_image(picture)
 
 
-def process_image(uploaded_file, image_label):
-    """Process the image with your ML model and display the results."""
+def process_image(uploaded_file: io.BytesIO, image_label: str) -> None:
+    """Process the image with your ML model and display the results.
+
+    Args:
+    ----
+        uploaded_file (BytesIO): The image to process.
+        image_label (str): The label to give to the image.
+    """
     # Convert the uploaded file to an image
     if uploaded_file is not None:
         # To read image file buffer with PIL:
