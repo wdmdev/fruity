@@ -5,14 +5,14 @@ metric:
   name: val/acc
 
 parameters:
-  model.model_name:
+  model.net.model_name:
     values: [resnet18, resnet34, resnet50]
   model.optimizer.lr:
     min: 0.00001
     max: 0.001
   model.optimizer.weight_decay:
     min: 0.0
-    max: 0.1
+    max: 0.01
   datamodule.batch_size:
     min: 16
     max: 512
