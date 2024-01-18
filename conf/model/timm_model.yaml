@@ -10,5 +10,5 @@ net:
   _target_: timm.create_model
   model_name: resnet18
   in_chans: 3
-  num_classes: 131
+  num_classes: -1231
   pretrained: True
