@@ -1,14 +1,16 @@
 """Frontend code for the fruity classification application."""
+import os
+import glob
 
+import json
 import streamlit as st
 from streamlit_webrtc import webrtc_streamer
 import cv2
-import os
 import av
 import numpy as np
 import time
-import shutil
 import atexit
+import requests
 
 from streamlit_webrtc import VideoProcessorBase
 
@@ -46,6 +48,7 @@ class VideoTransformer(VideoProcessorBase):
         self.frame = frame.to_ndarray(format="bgr24")
         return self.frame
 
+
 def main() -> None:
     """Start the frontend."""
     st.title("DEMO: fruity classification")
@@ -78,6 +81,32 @@ def main() -> None:
             # Add the image path to the session state
             st.session_state["images"].append(image_path)
 
+    # Load the API endpoint from a JSON file
+    with open("config.json", "r") as f:
+        config = json.load(f)
+    api_endpoint = config["api_endpoint"]
+
+    # Load the images from the snapshots directory
+    snapshots_dir = os.path.join(os.path.dirname(__file__), "snapshots")
+    image_paths = glob.glob(os.path.join(snapshots_dir, "*"))
+
+    # Add a button to send the images to the API endpoint
+    if st.button("Send Images"):
+        # Create a multipart-encoded file upload
+        files = [
+            ("images", (os.path.basename(image_path), open(image_path, "rb"), "image/png"))
+            for image_path in image_paths
+        ]
+        response = requests.post(api_endpoint, files=files)
+
+        # Check the response
+        if response.status_code == 200:
+            st.success("Images sent successfully!")
+            response_data = response.json()
+            st.session_state["classification_results"] = response_data["result"]
+        else:
+            st.error("Failed to send images.")
+
     # Display the images in a grid
     if len(st.session_state["images"]) > 0:
         num_columns = 3
@@ -92,6 +121,11 @@ def main() -> None:
                         # Read the image file into a numpy array
                         image = cv2.imread(st.session_state["images"][index], cv2.IMREAD_COLOR)
                         st.image(image)
+                        # Display the classification result under the image
+                        if "classification_results" in st.session_state and index < len(
+                            st.session_state["classification_results"]
+                        ):
+                            st.write(f"Classification: {st.session_state['classification_results'][index]}")
 
 
 def process_image(img: np.ndarray, image_label: str) -> str:
@@ -119,8 +153,12 @@ def process_image(img: np.ndarray, image_label: str) -> str:
 
 def clear_snapshots() -> None:
     """Clear the snapshots directory."""
-    shutil.rmtree(os.path.join(os.path.dirname(__file__), "snapshots"))
-    os.makedirs(os.path.join(os.path.dirname(__file__), "snapshots"))
+    snapshots_dir = os.path.join(os.path.dirname(__file__), "snapshots")
+    files = glob.glob(os.path.join(snapshots_dir, "*"))
+    for f in files:
+        if os.path.basename(f) != ".gitkeep":
+            os.remove(f)
+
 
 atexit.register(clear_snapshots)
 
