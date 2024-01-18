@@ -1,11 +1,12 @@
 #@package __global__
 
-datamodule.num_workers: max
-datamodule.batch_size: 64
-model.net.model_name: convnext_base
-trainer.max_epochs: 100
-model.lr: 0.0001
-model.weight_decay: 0.001
+overrides:
+  datamodule.num_workers: max
+  datamodule.batch_size: 64
+  model.net.model_name: convnext_base
+  trainer.max_epochs: 100
+  model.lr: 0.0001
+  model.weight_decay: 0.001
 
 # Example of how to run
 # python src/fruity/train.py experiment=experiment1
