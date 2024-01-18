@@ -1,5 +1,4 @@
-
-name: "Run tests"
+name: "Ruff checks"
 
 on:
   push:
@@ -24,12 +23,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install .
-    - name: Test with pytest
+    - name: Check with ruff
       run: |
-        pip install pytest
-        pytest -v
-    - name: Test coverage
-      run: |
-        pip install coverage
-        coverage run -m pytest ./tests
-        coverage report -m
+        pip install ruff
+        ruff check .
+        ruff format .
