@@ -1,4 +1,5 @@
 _target_: fruity.datamodules.fruits360.Fruits360DataModule
+dataset_name: foods_101
 data_dir: data/raw/foods_101/
 batch_size: 128
 train_val_test_split: [50_000 , 25_250, 25_750]

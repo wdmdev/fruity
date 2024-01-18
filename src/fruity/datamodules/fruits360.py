@@ -7,6 +7,7 @@ import torch
 from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
 from torchvision.transforms import transforms
 from PIL import Image
+from torchvision.transforms import TrivialAugmentWide
 
 from fruity.utils.git_download import download_github_folder
 
@@ -73,6 +74,7 @@ class Fruits360DataModule(LightningDataModule):
         persistent_workers: bool = False,
         num_classes: int = 131,
         pin_memory: bool = False,
+        dataset_name: str = "fruits_360",
     ) -> None:
         """LightningDataModule for Kaggle Fruits 360 dataset.
 
@@ -86,6 +88,7 @@ class Fruits360DataModule(LightningDataModule):
             persistent_workers (int): Whether to keep the workers after the first initialization.
             pin_memory (bool):              Whether to copy tensors into CUDA pinned memory.
             num_classes (int):              number of classes in dataset
+            dataset_name (str):             name of the dataset
         """
         super().__init__()
 
@@ -94,6 +97,14 @@ class Fruits360DataModule(LightningDataModule):
         self.save_hyperparameters(logger=False)
         if self.hparams.num_workers == "max":
             self.hparams.num_workers = torch.multiprocessing.cpu_count()
+
+        self.train_transforms = transforms.Compose(
+            [
+                TrivialAugmentWide(),
+                transforms.ToTensor(),
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            ]
+        )
 
         self.transforms = transforms.Compose(
             [
@@ -152,7 +163,7 @@ class Fruits360DataModule(LightningDataModule):
         """
         # load and split datasets only if not loaded already
         if not self.data_train and not self.data_val and not self.data_test:
-            trainset = Fruits360(self.hparams.data_dir, train=True, transform=self.transforms)
+            trainset = Fruits360(self.hparams.data_dir, train=True, transform=self.train_transforms)
             testset = Fruits360(self.hparams.data_dir, train=False, transform=self.transforms)
             dataset = ConcatDataset(datasets=[trainset, testset])
             self.data_train, self.data_val, self.data_test = random_split(

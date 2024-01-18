@@ -13,8 +13,9 @@ from torch.utils.data import DataLoader
 @click.option("--top_k", default=1, help="Number of top most likely classes to return.")
 @click.option("--ckpt_path", default="models/fruity1.ckpt", help="Path to the model checkpoint.")
 @click.option("--data_dir", default="data/raw/predict_fruits", help="Directory containing the images.")
+@click.option("--dataset_name", default="foods_101", help="Name of the dataset.")
 @click.option("--batch_size", default=1, help="Batch size for the dataloader.")
-def main(top_k: int, ckpt_path: str, data_dir: str, batch_size: int) -> None:
+def main(top_k: int, ckpt_path: str, data_dir: str, batch_size: int, dataset_name: str) -> None:
     """Run prediction for a given model and dataloader.
 
     Args:
@@ -23,6 +24,7 @@ def main(top_k: int, ckpt_path: str, data_dir: str, batch_size: int) -> None:
         ckpt_path: Path to the model checkpoint
         data_dir: Directory containing the images
         batch_size: Batch size for the dataloader
+        dataset_name: name of dataset. Prolly wont be used
 
     Returns:
     -------
@@ -31,7 +33,7 @@ def main(top_k: int, ckpt_path: str, data_dir: str, batch_size: int) -> None:
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    train_dataset = Fruits360("data/raw/fruits_360", train=True)
+    train_dataset = Fruits360("data/raw/" + dataset_name, train=True)
 
     # load model from check_point state_dict
     check_point = torch.load(ckpt_path, map_location=device)

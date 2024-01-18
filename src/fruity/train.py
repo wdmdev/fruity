@@ -3,6 +3,7 @@ from typing import List, Optional, Tuple, Mapping, Any
 
 import hydra
 import wandb
+import torch
 import omegaconf
 import pytorch_lightning as pl
 from omegaconf import DictConfig
@@ -53,6 +54,12 @@ def train(cfg: DictConfig) -> Tuple[Mapping[str, Any], Mapping[str, Any]]:
         trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"))
 
     train_metrics = trainer.callback_metrics
+
+    # save the weights of the best model after training
+    check_point = torch.load(trainer.checkpoint_callback.best_model_path, map_location="cpu")
+    state_dict = check_point["state_dict"]
+    state_dict = {k.replace("net.", ""): v for k, v in state_dict.items()}
+    torch.save(state_dict, "model" + cfg.datamodule.dataset_name + ".pth")
 
     if cfg.get("test"):
         ckpt_path = trainer.checkpoint_callback.best_model_path
