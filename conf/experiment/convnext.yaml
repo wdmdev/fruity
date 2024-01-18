@@ -9,11 +9,13 @@ model:
     model_name: convnext_large
 
   optimizer:
-    lr: 0.00001
+    _target_: torch.optim.AdamW
+    lr: 0.000005
     weight_decay: 0.0
 
 trainer:
-  max_epochs: 100
+  max_epochs: 20
+  precision: bf16-mixed
 
 # Example of how to run
 # python src/fruity/train.py experiment=experiment1
