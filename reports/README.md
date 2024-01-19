@@ -105,7 +105,7 @@ end of the project.
 >
 > Answer:
 
---- question 1 fill here ---
+14
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -116,7 +116,7 @@ end of the project.
 >
 > Answer:
 
---- question 2 fill here ---
+s183904, s183918, s183921, s183931
 
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
@@ -129,7 +129,7 @@ end of the project.
 >
 > Answer:
 
---- question 3 fill here ---
+We used PyTorch Lightning as the general framework in order to reduce the amount of boilerplate code and get started on the interesting coding challenges. We chose the model from the list of pre-trained TIMM (pytorch image models) models that performed best based on initial testing on the foods_101 classification task presented in this project. To do version control, git and dvc were used. At the beginning of the project, cookiecutter helped up set up the project, after which github actions (with pytest and ruff), unit tests and precommits were used to ensure the expected and bug-free functionality from our programming. We tracked our runs using weights and biases and hydra config files and we used GCP to run our project in the cloud.
 
 ## Coding environment
 
@@ -148,7 +148,24 @@ end of the project.
 >
 > Answer:
 
---- question 4 fill here ---
+We used pip for managing dependencies and throughout the work on the project, pipreqs was used to get the requirements for the development environment. If a new person were to join the project, they could get a copy of the development environment by running the commands:
+```bash
+git clone https://github.com/wdmdev/fruity.git
+
+cd fruity
+
+dvc pull
+
+make create_environment
+conda activate fruity
+
+make requirements
+
+make dvcfood
+```
+
+What these commands accomplish is first to clone the repository locally. Afterwards, the newest version of the data is downloaded, the conda virtual environment is created and activated, and lastly  all files from the requirements.txt file generated from pipreqs are installed on the virtual environment.
+
 
 ### Question 5
 
@@ -163,7 +180,9 @@ end of the project.
 > *experiments.*
 > Answer:
 
---- question 5 fill here ---
+From the cookiecutter template we have filled out the tests, dockerfiles, and .github folders. Also we filled out the models, train_model.py, predict_model.py, and data (just a bit of renaming). Although we changed the layout to a src-layout based on recommendations from the 'Python Packaging user Guide' e.g. prevent accidental usage of the in-development copy of the code.  
+We have added a conf folder that contains Hydra configs for running our experiments. 
+We have added an app folder that contains the fastapi code for serving an inference model endpoint on GC Run and a frontend folder containing a streamlit frontend that calls the backend api.
 
 ### Question 6
 
@@ -174,7 +193,7 @@ end of the project.
 >
 > Answer:
 
---- question 6 fill here ---
+To ensure the best code quality and format, we used ruff in github actions to adhere as best as possible to the pep8 style guide and to check for static typing using mypy. We also added typing hints with the typing python package. This matters in large projects, as code in such case is made as readable as possible (people read code more often than they write it) and errors are avoided to a degree where programmers know what types they should expect as inputs and outputs to their functions.
 
 ## Version control
 
@@ -193,7 +212,7 @@ end of the project.
 >
 > Answer:
 
---- question 7 fill here ---
+We have implemented 4 tests, 2 for data and 2 for the model, though these each contain a lot of assert-checks each. These would ideally be split further up into more separate test, which would make it easier to identify the root of a problem due to the failed test, but in our case this worked fine. 
 
 ### Question 8
 
@@ -208,7 +227,9 @@ end of the project.
 >
 > Answer:
 
---- question 8 fill here ---
+The total coverage of our source code is 40% for the model and 100% for the data. This is far from 100% general coverage, but it does however test the most important parts of the code which are model, training and data parts.  
+If we were at 100%, we would firstly be testing a bunch of code that does not necessarily have any critical impact on the functionality of the project. Secondly, 100% coverage does not equal 100% confidence in error-less performance, as the effectiveness of testing depends on the quality of the test cases, ie. high code coverage doesn't mean the tests are necessarily comprehensive. Even though we were to cover 100% of our code, we would still risk encountering problems caused by outside systems, as these projects are complex and dynamic in nature due to utilizing many services and so on. Lastly, tests can simply be written badly and create problems due to basic human error, even though they cover 100%.
+
 
 ### Question 9
 
@@ -223,7 +244,9 @@ end of the project.
 >
 > Answer:
 
---- question 9 fill here ---
+We made use of both branches and PRs in our project. Our git repo was set up with a protected main branch, meaning changes had to be committed and made as PRs from separate branches. To merge code from PRs, we set up the repo such that another member had to review the PR before the merge could be made. A (mostly verbal) convention was set up such that branches named feature/BRANCH_NAME were considered new features while bug/BRANCH_NAME were considered hotfixes and corrections. Furthermore, labels were used on the git issues such that the important tasks could be discovered at a quick glance.  
+Further, the pytest unittests were run using Github Actions, whenever a PR was made, ensuring that the proposed changes at least passed tests and hence did not break functionality on the main branch. The Github Actions also run Ruff to check formatting of the committed code and mypy static type checking. We also added the Ruff format check and mypy static type check to pre-commit to ensure no commits not following our desired style guides. Further more we used github issues for tasks and created branches and PRs based on these.
+
 
 ### Question 10
 
@@ -238,7 +261,7 @@ end of the project.
 >
 > Answer:
 
---- question 10 fill here ---
+We did make use of DVC in the following way: We used DVC for managing the data for the project, which improved our project in the sense that it is now easier for the user to get access to our data without the data being available on github. We are able to keep track of old versions of the data as well as rerun old models with the data that were used at that point in time. This was especially helpful because we were able to switch the type of data we were training on midway through without losing important history of the runs of the project beforehand.
 
 ### Question 11
 
@@ -254,7 +277,12 @@ end of the project.
 >
 > Answer:
 
---- question 11 fill here ---
+We used unit testing by implementing Pytest tests for the model and data.  Linting and formatting rules were defined using Ruff, which was also implemented in the pre-commit for each team member, such that formatting issues could be immediately amended.
+We did not test multiple operating systems, however we acknowledge that doing so would enable deployment on local machines easier and would open up the project to more users. Using 
+We also did not test multiple Python versions, since we enforce the use of Python 3.10.9 in our Fruity conda virtual machine. In that sense, running the code using different versions of python would be a mistake, since functionality from this version is used.
+We avoided caching, as this was deemed to be non-critical to the project. Had the github actions checks taken longer to run, caching could have been implemented to speed up this aspect of development.
+We organized our github actions into just one tests.yaml file for github actions, which uses pytest to test all functionality in the code, tests the formatting and formats the code with ruff and checks the coverage of the tests using the coverage package. This file can be accessed through the following link: https://github.com/wdmdev/fruity/blob/main/.github/workflows/tests.yaml
+
 
 ## Running code and tracking experiments
 
@@ -273,7 +301,7 @@ end of the project.
 >
 > Answer:
 
---- question 12 fill here ---
+We used Hydra configs. Here we defined a hierarchical structure where we defined config files for desired classes and used hydra to instantiate the objects. For experiments we used an experiment folder such that the default hydra configs could be overwritten with a new experiment.yaml e.g. by running `python train.py experiment=experiment1`.
 
 ### Question 13
 
@@ -288,7 +316,7 @@ end of the project.
 >
 > Answer:
 
---- question 13 fill here ---
+As explained in the answer to the last question, the experiments are tracked in the experiments folder of the project or the individual config files can be edited if the default values should be changed. In both cases, weights and biases is used to keep track of the config files and tracks these for each of the runs and sweeps that are performed. If seeds are then also set for each of the runs and the user ensures that he is using the correct git commit and dvc data instance, using the same config file should yield exactly the same results from the model when running a second time.
 
 ### Question 14
 
@@ -305,7 +333,15 @@ end of the project.
 >
 > Answer:
 
---- question 14 fill here ---
+The first and second images show the most valuable sweep from our experimentation with models. We tried a number of different pre-trained model architectures and also tested ranges for the batch size, weight decay and learning rate. We learned that batch size and weight decay has the highest importance in terms of increasing validation accuracy.
+![my_image](figures/14_1.png)
+Based on the image below, we also noted that larger models lead to a better performance in general, which probably meant that the chosen models were not complex enough to learn meaningful representations of the data. We also learned that well-performing models had high batch size, high learning rate and low weight decay.
+![my_image](figures/14_2.png)
+The last run shows the performance of a much larger model using parameters close to those suggested by the previous hyperparamter sweep. This larger model and the well-fitted hyperparameters lead to about 76% validation and test accuracy on the 101-class problem. This means that we were successful in getting a model to perform way better than the baseline on such a dataset using weights and biases.
+![my_image](figures/14_3.png)
+Had the project had a larger focus on getting the best possible accuracy, we would have run more sweeps for much larger and varying models after noticing the lack of performance from the models first tested in the sweep. This new sweep could indicate more fitting hyperparameters for these larger models and maybe even the ideal model size for this specific problem. Since we had many other tools to get working for this project, we had to accept the last run as the best we were able to get within the time given in this course.
+
+
 
 ### Question 15
 
@@ -320,7 +356,18 @@ end of the project.
 >
 > Answer:
 
---- question 15 fill here ---
+For inference we developed two docker images, which means one for running on a local machine and one for the GC Run deployment. The main difference between the two images hence being that the local image loads the model from a local folder and the GC Run image being integrated with the GC Storage python api client to load the model into the docker container when the fastapi service is running.
+To run the api docker image locally one can use the command:
+```bash
+make build_local_api_image
+make run_local_api_image
+```
+This is equivalent to running:
+```bash
+docker build -t local_fruity_api -f dockerfiles/local.api.dockerfile .
+docker run -p 80:80 local_fruity_api
+```
+
 
 ### Question 16
 
@@ -335,7 +382,8 @@ end of the project.
 >
 > Answer:
 
---- question 16 fill here ---
+Most of our group members used the built-in python debugger in vscode when running into issues. When the debugger was not useful enough and some quick print statements were not sufficient in explaining the error, chat gpt was sometimes useful. This was especially the case when we had to write code in frameworks that we were not very familiar with like difficult fastapi and yaml file configurations.
+In terms of profiling, we sadly did not get the chance to run the cProfile, torch profiler, line_profiler or kernprof profiling methods in this project work. We had too many more important focus points to get into profiling, although we acknowledge that profiling had been helpful, especially when our GCP compute engine VM started running rather slowly after a branch merge. Since we did not need fast run-time in our circumstances, we chose not to focus on fixing this issue.
 
 ## Working in the cloud
 
@@ -352,7 +400,10 @@ end of the project.
 >
 > Answer:
 
---- question 17 fill here ---
+We used the following 3 services:
+* Google Cloud Storage (Bucket): For saving data and models to the cloud.
+* Google Cloud Build (kind of part of GC Run): For continuous deployment of dockerized programs e.g. FastAPI endpoint. Triggered by file changes in github repo.
+* Google Cloud Run: For serving dockerized applications and managing them with monitoring and cloud logging.
 
 ### Question 18
 
@@ -367,7 +418,7 @@ end of the project.
 >
 > Answer:
 
---- question 18 fill here ---
+All model training was performed on a google cloud compute engine VM equipped with a 4 core cpu, 16gb ram and a tesla t4 GPU. The training was performed by cloning the repo onto the vm, downloading data onto the VM from a bucket using DVC, created and installing requirements on the conda environment with the necessary python version, then conducting the experiment(s) according to a hydra config or wandb sweep.  After a satisfactory model performance had been achieved and the best hyperparameters had been chosen, a standard wandb run was run and the best model was uploaded (manually sadly) to a bucket which could be accessed by the fast API backend etc. 
 
 ### Question 19
 
@@ -376,7 +427,9 @@ end of the project.
 >
 > Answer:
 
---- question 19 fill here ---
+![my_image](figures/19_1.png)
+with the DVC indexed content:
+![my_image](figures/19_2.png)
 
 ### Question 20
 
@@ -385,7 +438,9 @@ end of the project.
 >
 > Answer:
 
---- question 20 fill here ---
+We used the Artifact Registry recommended by the GC Platform.
+
+![my_image](figures/20_1.png)
 
 ### Question 21
 
@@ -394,7 +449,7 @@ end of the project.
 >
 > Answer:
 
---- question 21 fill here ---
+![my_image](figures/21_1.png)
 
 ### Question 22
 
@@ -410,7 +465,7 @@ end of the project.
 >
 > Answer:
 
---- question 22 fill here ---
+For deployment we wrapped our model into an application using FastAPI. We first tried locally serving the model, which worked. Then we build a docker container and ran that locally to ensure it worked and that the correct ports were exposed. Afterwards we deployed it in the cloud, using Google Cloud Run and Google Cloud Build. We did this by connecting the GC Run service and GC Build service to our Github Repo through the Console. Here we had to make some configurations to the build process to set the correct port for the container, the correct context for the container (it by default starts in the folder where the dockerfile is), and to define the files to listen on for changes in the github repo for when to rebuild and deploy. We also added code in the api, such that the model is loaded from a bucket in Google Cloud storage when the api is started. The service is publicly available and the Swagger docs can be seen on: https://fruity-backend-fyut4y5n7a-ey.a.run.app/. We have a single image and batch image classification endpoint.
 
 ### Question 23
 
@@ -425,7 +480,7 @@ end of the project.
 >
 > Answer:
 
---- question 23 fill here ---
+No, we did not implement monitoring. However, had we done so, monitoring would enable us to continuously maintain an overview of model performance and functionality as it is in production. With monitoring, we amongst other things seek to ensure continuous good performance by detecting data drift, ie. change in input data distribution, which can greatly hamper performance. By detecting data drift, we can retrain our model or re-optimize to accommodate the new data distribution. We are also seeking to avoid downtime by detecting potential/occurring anomalies that can break the model. Using monitoring can also alert us about abnormal activity, which can in some cases be caused by malicious usage/security breaches. 
 
 ### Question 24
 
@@ -439,7 +494,7 @@ end of the project.
 >
 > Answer:
 
---- question 24 fill here ---
+Across all our accounts we spend about 413ddks worth of credits. The most expensive service was without competition the VM equipped with a GPU used for training. The model api on Google Cloud Run together with a bucket on GC storage ended up costing 1 kr. 
 
 ## Overall discussion of project
 
@@ -460,7 +515,27 @@ end of the project.
 >
 > Answer:
 
---- question 25 fill here ---
+![my_image](figures/25_1.png)
+This diagram outlines our MLOps project setup, detailing the workflow from development to deployment for a machine learning application. Here's a breakdown of the workflow shown in the diagram.
+1. Local Development:  
+The process starts with a developer working on their local machine. They can use Hydra configs experimentation (train/val/testing) and they can track their experiments using W&B (Weights & Biases).
+2. Code Quality and Version Control:  
+Before the code is committed and pushed to a repository, code quality checks are done with Ruff (formatting/linting) and pre-commit hooks are applied to enforce the standards.  
+The code is then committed and pushed to GitHub, a version control platform.
+3. Continuous Integration and Delivery (CI/CD):  
+GitHub Actions are used to automate workflows, such as running tests, checking code coverage, and ensuring the code adheres to style guidelines and static type checking (mypy).  
+When the code is pushed to GitHub with a change to specific docker and/or code files, it triggers a build in Google Cloud Build,  that executes the build on Google Cloud Platform (GCP).
+4. Compute Engine:  
+The Compute Engine is where the training of the machine learning models takes place, using computational resources in VMs provided by Google Cloud.
+5. Model and Data Versioning:  
+DVC (Data Version Control) is used for versioning the data.  
+The models and training data are stored in buckets on Google Cloud Storage.
+6. Model Deployment:  
+The trained model is deployed using FastAPI, which is then hosted on Google Cloud Run.  
+Streamlit, which is a framework for quickly creating data applications, is used to create an MVP for a user interface for interacting with the model inference API endpoint.
+7. End-User Interaction:  
+The user can clone the source code from GitHub and run the application locally on their machine, possibly interacting with the deployed model through the Streamlit interface or directly with the API which can be served locally directly on the machine hardware or using docker.
+
 
 ### Question 26
 
@@ -474,7 +549,10 @@ end of the project.
 >
 > Answer:
 
---- question 26 fill here ---
+- One big issue we had was deploying the model inference api. We wanted to connect a GC Storage bucket to the GC Run container. We did not realize that the GC Builder uses another service agent than the developer service agent. Therefore we got a lot of error due to lack of permissions. To get around this we ended up not loading the model from GCS during the container build and instead load it in the code during runtime where the developer service agent permissions are used.
+- DVC caused issues because it did not work well for a large number of very small files. We also ran into runtime issues on the virtual machine, since it suddenly lost a lot of runtime. We had trouble finding the reason for the reduction in speed and we generally lost a lot of productivity for this reason.
+- While we had gotten to know the different methods throughout the course sessions and had a small amount of familiarity with how to get stuff to work in isolation, most of the modules on getting stuff to work together were allocated as optional modules. This meant that we had a lot of trouble getting everything we learned in this course to work together, since many methods are not straight-forward to get to talk to each other. One example of this was getting hydra to work in combination with weights and biases and pytorch lightning. It turned out to be true for us that higher levels of abstraction and less boilerplate leads to scrips that are much more difficult to debug and generally find errors in, since nothing happens explicitly and most of the errors were caused by code that we did not write. While we got most of the desired functionality working in the end, we had trouble getting there. Another example was getting cuda to work in the requirements file on GCP. This was difficult because the cuda version in the requirements folder had to match the version on the VM.
+
 
 ### Question 27
 
@@ -491,4 +569,8 @@ end of the project.
 >
 > Answer:
 
---- question 27 fill here ---
+Student s183904 was in charge of hyperparameter optimization, weights and biases, ruff and some parts of the model training.  
+Student s183918 was in charge of tests and making the front-end of the streamlit test app.  
+Student s183921 was in charge of setting up the initial project using cookiecutter, pre-commit, branch protection etc. and implementing and deploying the fastapi inference point on GC Run.  
+Student s183931 was in charge of most of the GCP functionality and the model training.  
+While these are the distributions of what the students have been most engaged with, each member of the team contributed to the project equally.
