@@ -9,7 +9,7 @@
 ## Project Description
 
 ### Project Goal
-The primary objective of this project is to develop a robust, accurate, and reliable machine learning model dedicated to classifying a diverse array of fruits and vegetables.
+The primary objective of this project is to develop a robust, accurate, and reliable machine learning model dedicated to classifying a diverse array of dishes.
 
 ### Frontend DEMO
 The functionality of this project can be demonstrated using the Streamlit frontend. To run the frontend, use the following command from the root directory of the project:
@@ -25,13 +25,14 @@ Our project will use the capabilities of the [`timm`](https://github.com/rwightm
 * **Customization and Fine-tuning**: TIMM not only offers pre-trained models but also allows customization. We can adjust layers, training parameters, and other aspects of the model to better suit our dataset and classification goals
 
 ### Dataset
-Our initial data set will be the [`Kaggle Fruits-360 dataset`](https://www.kaggle.com/datasets/moltean/fruits/data?fbclid=IwAR3nV6QmcRhNnCAnHAxbYpyHgke-qujIYtBPymdTrrD_IZ9jSMWnnVcAZm4) (version 2020.05.18.0).
+Our data set will be the [`Food101 dataset`](https://www.kaggle.com/datasets/dansbecker/food-101)
 
 **Dataset properties**
-* The total number of images: 90483.
-* Training set size: 67692 images (one fruit or vegetable per image).
-* Test set size: 22688 images (one fruit or vegetable per image).
-* The number of classes: 131 (fruits and vegetables).
+* The total number of images: 101.000 (one dish per image).
+* The number of classes: 101 - 1000 images per class. 
+* Training set size: 75000 images.
+* Validation set size 13000 images. 
+* Test set size: 13000 images.
 * Image size: 100x100 pixels.
 
 ### Models
