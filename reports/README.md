@@ -359,14 +359,17 @@ Had the project had a larger focus on getting the best possible accuracy, we wou
 For inference we developed two docker images, which means one for running on a local machine and one for the GC Run deployment. The main difference between the two images hence being that the local image loads the model from a local folder and the GC Run image being integrated with the GC Storage python api client to load the model into the docker container when the fastapi service is running.
 To run the api docker image locally one can use the command:
 ```bash
-make build_local_api_image
 make run_local_api_image
 ```
 This is equivalent to running:
 ```bash
 docker build -t local_fruity_api -f dockerfiles/local.api.dockerfile .
-docker run -p 80:80 local_fruity_api
+docker run -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcloud/fruity-api-credentials.json \
+				-v ~/.config/gcloud:/tmp/gcloud \
+				-p 80:80 local_fruity_api
 ```
+We are aware that the need for a credentials file does not make it possible for everyone to access the api. However we deemed it necessary to avoid misuse of the GC resources.
+
 
 
 ### Question 16
