@@ -4,7 +4,7 @@ from typing import Optional, Tuple, Callable, Union
 
 from pytorch_lightning import LightningDataModule
 import torch
-from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
+from torch.utils.data import DataLoader, Dataset, random_split
 from torchvision.transforms import transforms
 from PIL import Image
 from torchvision.transforms import TrivialAugmentWide
@@ -163,11 +163,13 @@ class Fruits360DataModule(LightningDataModule):
         """
         # load and split datasets only if not loaded already
         if not self.data_train and not self.data_val and not self.data_test:
-            trainset = Fruits360(self.hparams.data_dir, train=True, transform=self.train_transforms)
-            testset = Fruits360(self.hparams.data_dir, train=False, transform=self.transforms)
-            dataset = ConcatDataset(datasets=[trainset, testset])
-            self.data_train, self.data_val, self.data_test = random_split(
-                dataset=dataset, lengths=self.hparams.train_val_test_split
+            self.data_train = Fruits360(self.hparams.data_dir, train=True, transform=self.train_transforms)
+
+            testset_and_val = Fruits360(self.hparams.data_dir, train=False, transform=self.transforms)
+            # dataset = ConcatDataset(datasets=[trainset, testset])
+            self.data_val, self.data_test = random_split(
+                dataset=testset_and_val,
+                lengths=[int(len(testset_and_val) * 0.5), len(testset_and_val) - int(len(testset_and_val) * 0.5)],
             )
 
     def train_dataloader(self) -> DataLoader:

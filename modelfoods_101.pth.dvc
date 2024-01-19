@@ -1,0 +1,5 @@
+outs:
+- md5: 4e306183f63643c8c7ea2d68e05ee9f4
+  size: 95169742
+  hash: md5
+  path: modelfoods_101.pth

@@ -1,0 +1,21 @@
+#@package __global__
+
+datamodule:
+  num_workers: 16
+  batch_size: 128
+
+model:
+  net:
+    model_name: convnext_large
+
+  optimizer:
+    _target_: torch.optim.AdamW
+    lr: 0.0000066
+    weight_decay: 0.0
+
+trainer:
+  max_epochs: 30
+  precision: 16-mixed
+
+# Example of how to run
+# python src/fruity/train.py experiment=experiment1
