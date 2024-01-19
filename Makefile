@@ -7,21 +7,17 @@
 PROJECT_NAME = fruity
 PYTHON_VERSION = 3.10.9
 PYTHON_INTERPRETER = python
-SHELL=/bin/bash
-CONDA_ACTIVATE=source $$(conda info --base)/etc/profile.d/conda.sh ; conda activate ; conda activate
 
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
 
 ## Set up python interpreter environment
-# create_environment:
-# 	conda create --name $(PROJECT_NAME) python=$(PYTHON_VERSION) --no-default-packages -y
+create_environment:
+	conda create --name $(PROJECT_NAME) python=$(PYTHON_VERSION) --no-default-packages -y
 
 ## Install Python Dependencies
 requirements:
-	conda create --name $(PROJECT_NAME) python=$(PYTHON_VERSION) --no-default-packages -y
-	$(CONDA_ACTIVATE) $(PROJECT_NAME)
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
@@ -53,13 +49,11 @@ dvcfruit:
 #################################################################################
 
 ## Train model
-train:
-	$(CONDA_ACTIVATE) $(PROJECT_NAME)
+train: requirements
 	$(PYTHON_INTERPRETER) src/fruity/train.py
 
 
 trainfood:
-	$(CONDA_ACTIVATE) $(PROJECT_NAME)
 	$(PYTHON_INTERPRETER) src/fruity/train.py experiment=train_food
 
 
