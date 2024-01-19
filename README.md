@@ -125,3 +125,10 @@ coverage run --source=fruity -m pytest tests/
 ```bash
 coverage report -m
 ```
+
+### Serving API Locally
+To avoid misuse of the Google Cloud resources a credentials file is needed for running the api docker image (even locally).
+When a credentials `.json` file is obtained it should be renamed to fuity-api-credentials.json and placed in `~/.config/gcloud`. Then run:
+```
+make run_local_api_image
+```
