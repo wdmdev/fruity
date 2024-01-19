@@ -68,9 +68,11 @@ build_local_api_image:
 build_gc_api_image:
 	docker build -t fruity_api -f dockerfiles/gc.api.dockerfile .
 
-# Run fastapi docker image
-run_api_image:
-	docker run -p 80:80 fruity_api
+# Run fastapi docker image use your own GOOGLE_APPLICATION_CREDENTIALS
+run_local_api_image: build_local_api_image
+	docker run -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcloud/fruity-api-credentials.json \
+				-v ~/.config/gcloud:/tmp/gcloud \
+				-p 80:80 local_fruity_api
 
 # Check pre-commit hooks
 pre-commit:
